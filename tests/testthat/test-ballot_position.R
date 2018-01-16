@@ -1,2 +1,19 @@
 context("values in 'ballot position' are correct - order and total count")
 
+votes <- philly_votes()
+
+test_that("ballot position values are correct", {
+  # FIRST VOTER
+  expect_equal(votes$position[1:24], c("3C", "6C", "7C", "8C", "10C", "12C",
+                                       "14C", "16C", "18C", "25C", "27C", "32C",
+                                       "33C", "36C", "7D", "9D", "12D", "19D",
+                                       "21D", "25D", "14E", "20E", "13L", "26L"))
+
+  # SECOND VOTER
+  expect_equal(votes$position[25:38], c("3C", "6C", "7C", "9D", "10D", "12D",
+                                        "14D", "15D", "17D", "18D", "19D",
+                                        "20D", "24E", "28E"))
+
+  # LAST 6 votes
+  expect_equal(tail(votes$position), c("22C", "23C", "29C", "31C", "6D", "9D"))
+})

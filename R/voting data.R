@@ -6,9 +6,9 @@ library(zoo) # for na.locf()
 ### Find Files to Pull ###
 
 philly_votes <- function(){
-  files <- list.files("data/")
+  files <- list.files("C:/Users/user/Dropbox/R_project/phillyvotes/data/")
   files <- grep(".pdf", files, ignore.case = TRUE, value = TRUE) # Search directory for PDFs
-  files <- paste0("data/", files) # Save full relative path to all PDFs
+  files <- paste0("C:/Users/user/Dropbox/R_project/phillyvotes/data/", files) # Save full relative path to all PDFs
 
   file.location <- files[1]
 
@@ -123,10 +123,12 @@ philly_votes <- function(){
                          position   = ballot,
                          category   = category,
                          candidate  = name,
-                         votes      = vote)
+                         votes      = vote,
+                         stringsAsFactors = FALSE)
 
   # Turn "" into NA - mostly for dealing with them easier in R
-  txt.data <- data.frame(apply(txt.data, FUN = function(x) (ifelse(x == "", NA, x)), MARGIN = 2))
+  txt.data <- data.frame(apply(txt.data, FUN = function(x) (ifelse(x == "", NA, x)), MARGIN = 2),
+                         stringsAsFactors = FALSE)
 
   # Fill in relevant columns
   # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for

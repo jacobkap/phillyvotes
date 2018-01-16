@@ -1,5 +1,7 @@
 context("values in 'votes' are correct - order and total count")
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+votes <- philly_votes()
+
+test_that("all votes are equal to 1", {
+  expect_equal(unique(votes$votes), 1)
 })
