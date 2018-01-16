@@ -1,18 +1,12 @@
-# Clean memory - not really necessary but good practice before running scripts that handle a lot of data
-remove(list = ls(all = TRUE))
-gc()
-
 library(pdftools) # Converts PDF to text
 library(zoo) # for na.locf()
 # library(beepr) # for beep() - optional: has computer make a noise when function is called
 
-# Pull pdf names from directory
-directory <- "~/Desktop/Miscellaneous/Philly Vote Data/Votes" # Input for funtion
 
 ### Find Files to Pull ###
-files <- list.files(directory)
+files <- list.files("data/")
 files <- grep(".pdf", files, ignore.case = TRUE, value = TRUE) # Search directory for PDFs
-files <- paste(directory, files, sep = "/") # Save full path to all PDFs
+files <- paste0("data/", files) # Save full relative path to all PDFs
 
 file.location <- files[1]
 
@@ -20,6 +14,7 @@ file.location <- files[1]
 # suppressWarnings() simply hides and error that cannot be addressed but doesn't impact the output
 doc <- suppressWarnings(pdf_text(file.location))
 txt <- do.call(c, strsplit(doc, split = "\n"))
+txt <- trimws(txt)
 
 ### Begin searches for searching for specific items ###
 # These use regexpr() to find the starting and stopping location of each item followed by data cleaning to remove
@@ -30,8 +25,8 @@ txt <- do.call(c, strsplit(doc, split = "\n"))
 ballot.loc <- regexpr("[0-9]*[A-Z]", txt)
 ballot.start <- as.numeric(ballot.loc)
 ballot.stop <- ballot.start + attributes(ballot.loc)$match.length
-ballot <- substr(txt, 
-                 start = ballot.start, 
+ballot <- substr(txt,
+                 start = ballot.start,
                  stop = ballot.stop)
 # Method pulls non-positions and extra space
 ballot <- gsub("[A-Za-z]{2}", "", ballot)
@@ -42,16 +37,16 @@ serial.loc <- regexpr("[0-9]{6}", txt)
 serial.start <- as.numeric(serial.loc)
 # Since serial number should appear in first position, length is same as end position
 serial.stop <- attributes(serial.loc)$match.length
-serial <- substr(txt, 
-                 start = serial.start, 
+serial <- substr(txt,
+                 start = serial.start,
                  stop = serial.stop)
 
 ### Voting Location ###
 location.loc <- regexpr(" [0-9][0-9]-[0-9][0-9]", txt)
 location.start <- as.numeric(location.loc)
 location.stop <- location.start + attributes(location.loc)$match.length
-location <- substr(txt, 
-                   start = location.start, 
+location <- substr(txt,
+                   start = location.start,
                    stop = location.stop)
 # Method pulls extra space
 location <- gsub(" ", "", location)
@@ -60,8 +55,8 @@ location <- gsub(" ", "", location)
 record.loc <- regexpr("[0-9]+ OF +[0-9]+", txt)
 record.start <- as.numeric(record.loc)
 record.stop <- record.start + attributes(record.loc)$match.length
-record <- substr(txt, 
-                 start = record.start, 
+record <- substr(txt,
+                 start = record.start,
                  stop = record.stop)
 # Method pulls phrase preceeding voter record and extra space
 record <- gsub("[0-9]+ OF", "", record)
@@ -72,22 +67,22 @@ record <- gsub(" ", "", record)
 name.loc <- regexpr("([A-Z] )?[A-Za-z]+, [A-Za-z]+", txt)
 name.start <- as.numeric(name.loc)
 name.stop <- name.start + attributes(name.loc)$match.length
-name <- substr(txt, 
-               start = name.start, 
+name <- substr(txt,
+               start = name.start,
                stop = name.stop)
 # Find Ballot Measures with no candidate name - matched with "YES SI"
 measure1.loc <- regexpr("YES SI", txt)
 measure1.start <- as.numeric(measure1.loc)
 measure1.stop <- measure1.start + attributes(measure1.loc)$match.length
-measure1 <- substr(txt, 
-                   start = measure1.start, 
+measure1 <- substr(txt,
+                   start = measure1.start,
                    stop = measure1.stop)
 # Find Ballot Measures with no candidate name - matched with "NO NO"
 measure2.loc <- regexpr("NO NO", txt)
 measure2.start <- as.numeric(measure2.loc)
 measure2.stop <- measure2.start + attributes(measure2.loc)$match.length
-measure2 <- substr(txt, 
-                   start = measure2.start, 
+measure2 <- substr(txt,
+                   start = measure2.start,
                    stop = measure2.stop)
 # Track when the names start, we will not use this for the actual name but rather for another item
 name.start <- ifelse(name.start == -1, # If no name
@@ -104,8 +99,8 @@ name <- trimws(name, which = "both") # Trim trailing and leading spaces
 vote.loc <- regexpr("[0-9]$", txt)
 vote.start <- as.numeric(vote.loc)
 vote.stop <- vote.start + attributes(vote.loc)$match.length
-vote <- substr(txt, 
-               start = vote.start, 
+vote <- substr(txt,
+               start = vote.start,
                stop = vote.stop)
 # Make sure we only keep observations that make sense given the ballot information
 vote <- ifelse(ballot == "", "", vote)
@@ -115,8 +110,8 @@ vote <- ifelse(ballot == "", "", vote)
 #   including the end of the item to the left and the start of the item to the right
 category.start <- ifelse(ballot == "", -1, ballot.stop + 1)
 category.stop <- ifelse(ballot == "", -1, name.start - 1)
-category <- substr(txt, 
-                   start = category.start, 
+category <- substr(txt,
+                   start = category.start,
                    stop = category.stop)
 category <- trimws(category, which = "both") # Trim trailing and leading spaces
 
