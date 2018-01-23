@@ -19,6 +19,7 @@ philadelphia_votes <- function() {
   for (file in files) {
     results <- dplyr::bind_rows(results, philly_votes(file))
   }
+  rownames(results) <- 1:nrow(results)
   return(results)
 }
 

@@ -5,7 +5,8 @@ philly_votes <- function(file.location){
   txt <- unlist(strsplit(doc, split = "\n"))
   txt <- trimws(txt)
 
-  if (any(grepl("cartridge audit log report", txt[1:10], ignore.case = TRUE))) {
+  # If PDF is not a "BALLOT IMAGE PROOF" file, skips it
+  if (!any(grepl("ballot image proof", txt[1:10], ignore.case = TRUE))) {
     return(data.frame())
   }
 
