@@ -5,6 +5,10 @@ philly_votes <- function(file.location){
   txt <- unlist(strsplit(doc, split = "\n"))
   txt <- trimws(txt)
 
+  if (any(grepl("cartridge audit log report", txt[1:10], ignore.case = TRUE))) {
+    return(data.frame())
+  }
+
   ### Begin searches for searching for specific items ###
   # These use regexpr() to find the starting and stopping location of each item followed by data cleaning to remove
   #   extra text that may be pulled in addition to the text we actually want.
