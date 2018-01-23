@@ -1,6 +1,9 @@
 context("values in 'category' are correct - order and total count")
 
-votes <- philly_votes()
+testing_file <- system.file("data", "2017 Primary - Black BIR 1.pdf",
+                            package = "phillyvotes")
+votes <- philly_votes(testing_file)
+
 
 test_that("categories are in the right order", {
   expect_equal(votes$category[1], "JUSTICE OF THE SUPREME COURT-DEM")

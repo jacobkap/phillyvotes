@@ -1,20 +1,7 @@
-library(pdftools) # Converts PDF to text
-library(zoo) # for na.locf()
-# library(beepr) # for beep() - optional: has computer make a noise when function is called
-
-
-### Find Files to Pull ###
-
-philly_votes <- function(){
-  files <- list.files("C:/Users/user/Dropbox/R_project/phillyvotes/data/")
-  files <- grep(".pdf", files, ignore.case = TRUE, value = TRUE) # Search directory for PDFs
-  files <- paste0("C:/Users/user/Dropbox/R_project/phillyvotes/data/", files) # Save full relative path to all PDFs
-
-  file.location <- files[1]
-
+philly_votes <- function(file.location){
   ### Convert PDF to lines of text ###
   # suppressWarnings() simply hides and error that cannot be addressed but doesn't impact the output
-  doc <- suppressWarnings(pdf_text(file.location))
+  doc <- suppressMessages(pdftools::pdf_text(file.location))
   txt <- unlist(strsplit(doc, split = "\n"))
   txt <- trimws(txt)
 
@@ -133,9 +120,9 @@ philly_votes <- function(){
   # Fill in relevant columns
   # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for
   #   filling in data based on order
-  txt.data$location <- na.locf(txt.data$location, na.rm = FALSE)
-  txt.data$sernum <- na.locf(txt.data$sernum, na.rm = FALSE)
-  txt.data$voterecord <- na.locf(txt.data$voterecord, na.rm = FALSE)
+  txt.data$location <- zoo::na.locf(txt.data$location, na.rm = FALSE)
+  txt.data$sernum <- zoo::na.locf(txt.data$sernum, na.rm = FALSE)
+  txt.data$voterecord <- zoo::na.locf(txt.data$voterecord, na.rm = FALSE)
   txt.data$uniqueID   <-  paste(txt.data$location, txt.data$sernum, txt.data$voterecord)
 
   # Remove uncessary rows

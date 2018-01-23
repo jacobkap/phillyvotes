@@ -1,6 +1,8 @@
 context("values in 'candidate name' are correct - order and total count")
 
-votes <- philly_votes()
+testing_file <- system.file("data", "2017 Primary - Black BIR 1.pdf",
+                            package = "phillyvotes")
+votes <- philly_votes(testing_file)
 
 test_that("candidate name is in right order", {
   expect_equal(votes$candidate[1], "WOODRUFF, DWAYNE")
