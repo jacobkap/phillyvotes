@@ -51,7 +51,7 @@ philly_votes <- function(file.location){
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
-  name.loc <- regexpr("([A-Z] )?[A-Za-z]+, [A-Za-z]+", txt)
+  name.loc <- regexpr("([A-Z] )?[A-Za-z]+, [A-Za-z]+(\\s+[[[:alpha:]])?", txt)
   name.start <- as.numeric(name.loc)
   name.stop <- name.start + attributes(name.loc)$match.length
   name <- substr(txt,
