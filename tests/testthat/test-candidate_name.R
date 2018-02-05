@@ -34,59 +34,59 @@ test_that("candidate name is in right order", {
 
 test_that("Candidate has right name", {
 
-  expect_equal(votes2$candidate[votes2$sernum == "022105" &
+  expect_equal(votes2$candidate[votes2$serial_number == "022105" &
                                   votes2$location == "43-04" &
-                                  votes2$voterecord == 1 &
-                                  votes2$position == "33C"],
+                                  votes2$voter_record == 1 &
+                                  votes2$ballot_position == "33C"],
                "RIVERS SR, MICHAEL A")
 
-  expect_equal(votes2$candidate[votes2$sernum == "021454" &
+  expect_equal(votes2$candidate[votes2$serial_number == "021454" &
                                   votes2$location == "33-07" &
-                                  votes2$voterecord == 22 &
-                                  votes2$position == "36F"],
+                                  votes2$voter_record == 22 &
+                                  votes2$ballot_position == "36F"],
                "STREEPER JR, BILL E")
 
 })
 
 test_that("Write In ballots have correct name", {
-  expect_equal(votes$candidate[votes$sernum == "022727" &
+  expect_equal(votes$candidate[votes$serial_number == "022727" &
                                   votes$location == "56-04" &
-                                  votes$voterecord == 36 &
-                                  votes$position == "5G"],
+                                  votes$voter_record == 36 &
+                                  votes$ballot_position == "5G"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022909" &
+  expect_equal(votes$candidate[votes$serial_number == "022909" &
                                  votes$location == "58-26" &
-                                 votes$voterecord == 13 &
-                                 votes$position == "35E"],
+                                 votes$voter_record == 13 &
+                                 votes$ballot_position == "35E"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022909" &
+  expect_equal(votes$candidate[votes$serial_number == "022909" &
                                  votes$location == "58-26" &
-                                 votes$voterecord == 13 &
-                                 votes$position == "38E"],
+                                 votes$voter_record == 13 &
+                                 votes$ballot_position == "38E"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022754" &
+  expect_equal(votes$candidate[votes$serial_number == "022754" &
                                  votes$location == "56-17" &
-                                 votes$voterecord == 9 &
-                                 votes$position == "22G"],
+                                 votes$voter_record == 9 &
+                                 votes$ballot_position == "22G"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022754" &
+  expect_equal(votes$candidate[votes$serial_number == "022754" &
                                  votes$location == "56-17" &
-                                 votes$voterecord == 9 &
-                                 votes$position == "26G"],
+                                 votes$voter_record == 9 &
+                                 votes$ballot_position == "26G"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022754" &
+  expect_equal(votes$candidate[votes$serial_number == "022754" &
                                  votes$location == "56-17" &
-                                 votes$voterecord == 9 &
-                                 votes$position == "35G"],
+                                 votes$voter_record == 9 &
+                                 votes$ballot_position == "35G"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022754" &
+  expect_equal(votes$candidate[votes$serial_number == "022754" &
                                  votes$location == "56-17" &
-                                 votes$voterecord == 9 &
-                                 votes$position == "38G"],
+                                 votes$voter_record == 9 &
+                                 votes$ballot_position == "38G"],
                "Write In")
-  expect_equal(votes$candidate[votes$sernum == "022880" &
+  expect_equal(votes$candidate[votes$serial_number == "022880" &
                                  votes$location == "58-11" &
-                                 votes$voterecord == 10 &
-                                 votes$position == "22G"],
+                                 votes$voter_record == 10 &
+                                 votes$ballot_position == "22G"],
                "Write In")
 })

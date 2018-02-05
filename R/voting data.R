@@ -37,7 +37,8 @@ philly_votes <- function(file.location){
   ### Voting Location ###
   location.loc <- regexpr(" [0-9][0-9]-[0-9][0-9]", txt)
   location.start <- as.numeric(location.loc)
-  location.stop <- location.start + attributes(location.loc)$match.length
+  location.stop <- location.start +
+                   attributes(location.loc)$match.length
   location <- substr(txt,
                      start = location.start,
                      stop = location.stop)
@@ -56,36 +57,13 @@ philly_votes <- function(file.location){
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
-  name.loc <- regexpr("([A-Z]+ )?[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?", txt)
-  if (name.loc == -1) name.loc <- regexpr("Write in", txt, ignore.case = TRUE)
+  name.loc <- regexpr("([A-Z]+ )?[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO NO|YES SI", txt)
+ # name.loc[name.loc == -1] <- regexpr("Write in|NO NO|YES SI", txt[name.loc == -1], ignore.case = TRUE)
   name.start <- as.numeric(name.loc)
   name.stop <- name.start + attributes(name.loc)$match.length
   name <- substr(txt,
                  start = name.start,
                  stop = name.stop)
-  # Find Ballot Measures with no candidate name - matched with "YES SI"
-  measure1.loc <- regexpr("YES SI", txt)
-  measure1.start <- as.numeric(measure1.loc)
-  measure1.stop <- measure1.start + attributes(measure1.loc)$match.length
-  measure1 <- substr(txt,
-                     start = measure1.start,
-                     stop = measure1.stop)
-  # Find Ballot Measures with no candidate name - matched with "NO NO"
-  measure2.loc <- regexpr("NO NO", txt)
-  measure2.start <- as.numeric(measure2.loc)
-  measure2.stop <- measure2.start + attributes(measure2.loc)$match.length
-  measure2 <- substr(txt,
-                     start = measure2.start,
-                     stop = measure2.stop)
-  # Track when the names start, we will not use this for the actual name but rather for another item
-  name.start <- ifelse(name.start == -1, # If no name
-                       ifelse(measure1.start == -1, # If no "YES SI" vote
-                              measure2.start, # Return "NO NO"
-                              measure1.start), # Return "YES SI"
-                       name.start) # Return Name
-  # Continue cleaning by first merge all data together (as no one can have a name and ballot measure in the same location
-  #   this will not have to worry about copying over data)
-  name <- ifelse(name == "", ifelse(measure1 == "", measure2, measure1), name)
   name <- trimws(name) # Trim trailing and leading spaces
 
   ### Votes ###
@@ -126,10 +104,15 @@ philly_votes <- function(file.location){
   # Fill in relevant columns
   # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for
   #   filling in data based on order
-  txt.data$location <- zoo::na.locf(txt.data$location, na.rm = FALSE)
-  txt.data$serial_number <- zoo::na.locf(txt.data$serial_number, na.rm = FALSE)
-  txt.data$voter_record <- zoo::na.locf(txt.data$voter_record, na.rm = FALSE)
-  txt.data$uniqueID   <-  paste(txt.data$location, txt.data$sernum, txt.data$voterecord)
+  txt.data$location <- zoo::na.locf(txt.data$location,
+                                    na.rm = FALSE)
+  txt.data$serial_number <- zoo::na.locf(txt.data$serial_number,
+                                         na.rm = FALSE)
+  txt.data$voter_record <- zoo::na.locf(txt.data$voter_record,
+                                        na.rm = FALSE)
+  txt.data$uniqueID   <-  paste(txt.data$location,
+                                txt.data$serial_number,
+                                txt.data$voter_record)
   txt.data$file <- gsub(".*/", "", file.location)
 
   # Remove uncessary rows

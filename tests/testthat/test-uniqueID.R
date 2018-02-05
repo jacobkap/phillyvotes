@@ -13,15 +13,15 @@ test_that("unique IDs in right order", {
 test_that("proper number of unique ID for a location and serial number match", {
 
   expect_equal(length(unique(votes$uniqueID[votes$location == "56-01" &
-                                             votes$sernum == "022721"])), 41)
+                                             votes$serial_number == "022721"])), 41)
   expect_equal(length(unique(votes$uniqueID[votes$location == "57-19" &
-                                             votes$sernum == "022840"])), 37)
+                                             votes$serial_number == "022840"])), 37)
   expect_equal(length(unique(votes$uniqueID[votes$location == "57-19" &
-                                             votes$sernum == "022839"])), 44)
+                                             votes$serial_number == "022839"])), 44)
   expect_equal(length(unique(votes$uniqueID[votes$location == "58-19" &
-                                             votes$sernum == "022895"])), 66)
+                                             votes$serial_number == "022895"])), 66)
   expect_equal(length(unique(votes$uniqueID[votes$location == "57-06" &
-                                             votes$sernum == "022814"])), 69)
+                                             votes$serial_number == "022814"])), 69)
 })
 
 test_that("unique IDs have proper number of rows", {
