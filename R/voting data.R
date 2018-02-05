@@ -57,6 +57,7 @@ philly_votes <- function(file.location){
   ### Candidate Name ###
   # Need first A-Z for middle initial
   name.loc <- regexpr("([A-Z]+ )?[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?", txt)
+  if (name.loc == -1) name.loc <- regexpr("Write in", txt, ignore.case = TRUE)
   name.start <- as.numeric(name.loc)
   name.stop <- name.start + attributes(name.loc)$match.length
   name <- substr(txt,
@@ -116,7 +117,6 @@ philly_votes <- function(file.location){
                          category          = category,
                          candidate         = name,
                          votes             = vote,
-                         file              = gsub(".*/", "", file.location),
                          stringsAsFactors = FALSE)
 
   # Turn "" into NA - mostly for dealing with them easier in R
@@ -130,6 +130,7 @@ philly_votes <- function(file.location){
   txt.data$serial_number <- zoo::na.locf(txt.data$serial_number, na.rm = FALSE)
   txt.data$voter_record <- zoo::na.locf(txt.data$voter_record, na.rm = FALSE)
   txt.data$uniqueID   <-  paste(txt.data$location, txt.data$sernum, txt.data$voterecord)
+  txt.data$file <- gsub(".*/", "", file.location)
 
   # Remove uncessary rows
   txt.data <- txt.data[!is.na(txt.data$votes), ]

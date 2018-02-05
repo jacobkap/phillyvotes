@@ -47,3 +47,46 @@ test_that("Candidate has right name", {
                "STREEPER JR, BILL E")
 
 })
+
+test_that("Write In ballots have correct name", {
+  expect_equal(votes$candidate[votes$sernum == "022727" &
+                                  votes$location == "56-04" &
+                                  votes$voterecord == 36 &
+                                  votes$position == "5G"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022909" &
+                                 votes$location == "58-26" &
+                                 votes$voterecord == 13 &
+                                 votes$position == "35E"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022909" &
+                                 votes$location == "58-26" &
+                                 votes$voterecord == 13 &
+                                 votes$position == "38E"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022754" &
+                                 votes$location == "56-17" &
+                                 votes$voterecord == 9 &
+                                 votes$position == "22G"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022754" &
+                                 votes$location == "56-17" &
+                                 votes$voterecord == 9 &
+                                 votes$position == "26G"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022754" &
+                                 votes$location == "56-17" &
+                                 votes$voterecord == 9 &
+                                 votes$position == "35G"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022754" &
+                                 votes$location == "56-17" &
+                                 votes$voterecord == 9 &
+                                 votes$position == "38G"],
+               "Write In")
+  expect_equal(votes$candidate[votes$sernum == "022880" &
+                                 votes$location == "58-11" &
+                                 votes$voterecord == 10 &
+                                 votes$position == "22G"],
+               "Write In")
+})
