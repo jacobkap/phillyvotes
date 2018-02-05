@@ -56,7 +56,7 @@ philly_votes <- function(file.location){
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
-  name.loc <- regexpr("([A-Z] )?[A-Za-z]+, [A-Za-z]+(\\s+[[[:alpha:]])?", txt)
+  name.loc <- regexpr("([A-Z]+ )?[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?", txt)
   name.start <- as.numeric(name.loc)
   name.stop <- name.start + attributes(name.loc)$match.length
   name <- substr(txt,
@@ -109,13 +109,14 @@ philly_votes <- function(file.location){
 
   ### Merge Data ###
   # We haven't changed order, so observations will still line up properly
-  txt.data <- data.frame(location   = location,
-                         sernum     = serial,
-                         voterecord = record,
-                         position   = ballot,
-                         category   = category,
-                         candidate  = name,
-                         votes      = vote,
+  txt.data <- data.frame(location          = location,
+                         serial_number     = serial,
+                         voter_record      = record,
+                         ballot_position   = ballot,
+                         category          = category,
+                         candidate         = name,
+                         votes             = vote,
+                         file              = gsub(".*/", "", file.location),
                          stringsAsFactors = FALSE)
 
   # Turn "" into NA - mostly for dealing with them easier in R
@@ -126,15 +127,15 @@ philly_votes <- function(file.location){
   # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for
   #   filling in data based on order
   txt.data$location <- zoo::na.locf(txt.data$location, na.rm = FALSE)
-  txt.data$sernum <- zoo::na.locf(txt.data$sernum, na.rm = FALSE)
-  txt.data$voterecord <- zoo::na.locf(txt.data$voterecord, na.rm = FALSE)
+  txt.data$serial_number <- zoo::na.locf(txt.data$serial_number, na.rm = FALSE)
+  txt.data$voter_record <- zoo::na.locf(txt.data$voter_record, na.rm = FALSE)
   txt.data$uniqueID   <-  paste(txt.data$location, txt.data$sernum, txt.data$voterecord)
 
   # Remove uncessary rows
   txt.data <- txt.data[!is.na(txt.data$votes), ]
 
   # Fix Format
-  txt.data$voterecord <- as.numeric(as.character(txt.data$voterecord))
+  txt.data$voter_record <- as.numeric(as.character(txt.data$voter_record))
   txt.data$votes <- as.numeric(as.character(txt.data$votes))
 
   return(txt.data)
