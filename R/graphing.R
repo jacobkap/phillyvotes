@@ -1,7 +1,4 @@
-# Graph the election results
-library(ggplot2)
-library(ggthemes)
-library(scales)
+
 
 #results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-REP", TRUE)
 #results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-REP")
