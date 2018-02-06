@@ -20,3 +20,9 @@ test_that("ballot ballot_position values are correct", {
   # LAST 6 votes
   expect_equal(tail(votes$ballot_position), c("22C", "23C", "29C", "31C", "6D", "9D"))
 })
+
+
+test_that("Ballots with No Vote all have position 43A", {
+  expect_equal(unique(votes$ballot_position[votes$candidate == "No Vote"]),
+               "43A")
+})

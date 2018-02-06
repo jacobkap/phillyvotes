@@ -87,3 +87,9 @@ test_that("Write In ballots have correct category", {
                "JUDGE OF ELECTION-DEM-07-22")
 
 })
+
+
+test_that("Ballots with No Vote all have category NA", {
+  expect_true(is.na(unique(votes$category[votes$candidate == "No Vote"])))
+})
+

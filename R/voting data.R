@@ -57,14 +57,14 @@ philly_votes <- function(file.location){
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
-  name.loc <- regexpr("([A-Z]+ )?[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO NO|YES SI", txt)
- # name.loc[name.loc == -1] <- regexpr("Write in|NO NO|YES SI", txt[name.loc == -1], ignore.case = TRUE)
+  name.loc <- regexpr("([A-Z]+ )*[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO NO|YES SI|No Vote", txt)
   name.start <- as.numeric(name.loc)
   name.stop <- name.start + attributes(name.loc)$match.length
   name <- substr(txt,
                  start = name.start,
                  stop = name.stop)
   name <- trimws(name) # Trim trailing and leading spaces
+  name <- gsub("(.*), (.*)", "\\2 \\1", name)
 
   ### Votes ###
   vote.loc <- regexpr("[0-9]$", txt)

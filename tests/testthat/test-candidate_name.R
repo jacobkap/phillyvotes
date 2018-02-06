@@ -12,22 +12,22 @@ testing_file2 <- system.file("data",
 votes2 <- philly_votes(testing_file2)
 
 test_that("candidate name is in right order", {
-  expect_equal(votes$candidate[1], "WOODRUFF, DWAYNE")
-  expect_equal(votes$candidate[9], "BOZZELLI, LAWRENCE J")
-  expect_equal(votes$candidate[10], "TWARDY, GEORGE")
-  expect_equal(votes$candidate[15], "CAYE, BILL")
-  expect_equal(votes$candidate[20], "TOPPIN, SHERMAN")
+  expect_equal(votes$candidate[1], "DWAYNE WOODRUFF")
+  expect_equal(votes$candidate[9], "LAWRENCE J BOZZELLI")
+  expect_equal(votes$candidate[10], "GEORGE TWARDY")
+  expect_equal(votes$candidate[15], "BILL CAYE")
+  expect_equal(votes$candidate[20], "SHERMAN TOPPIN")
   expect_equal(votes$candidate[23], "NO NO")
   expect_equal(votes$candidate[24], "YES SI")
-  expect_equal(votes$candidate[25], "WOODRUFF, DWAYNE")
+  expect_equal(votes$candidate[25], "DWAYNE WOODRUFF")
 
   # last 6 votes
-  expect_equal(tail(votes$candidate), c("COHEN, MARK B",
-                                        "WOLF, MATT",
-                                        "UNTERMEYER, MICHAEL W",
-                                        "RHYNHART, REBECCA",
-                                        "KUNSELMAN, DEBBIE",
-                                        "CEISLER, ELLEN"))
+  expect_equal(tail(votes$candidate), c("MARK B COHEN",
+                                        "MATT WOLF",
+                                        "MICHAEL W UNTERMEYER",
+                                        "REBECCA RHYNHART",
+                                        "DEBBIE KUNSELMAN",
+                                        "ELLEN CEISLER"))
 
 })
 
@@ -38,13 +38,16 @@ test_that("Candidate has right name", {
                                   votes2$location == "43-04" &
                                   votes2$voter_record == 1 &
                                   votes2$ballot_position == "33C"],
-               "RIVERS SR, MICHAEL A")
+               "MICHAEL A RIVERS SR")
 
   expect_equal(votes2$candidate[votes2$serial_number == "021454" &
                                   votes2$location == "33-07" &
                                   votes2$voter_record == 22 &
                                   votes2$ballot_position == "36F"],
-               "STREEPER JR, BILL E")
+               "BILL E STREEPER JR")
+
+  expect_false(all(grepl(",", votes$candidate)))
+  expect_false(all(grepl(",", votes2$candidate)))
 
 })
 
@@ -89,4 +92,34 @@ test_that("Write In ballots have correct name", {
                                  votes$voter_record == 10 &
                                  votes$ballot_position == "22G"],
                "Write In")
+})
+
+test_that("No Vote ballots have correct name", {
+  expect_equal(votes2$candidate[votes2$serial_number == "022058" &
+                                 votes2$location == "42-05" &
+                                 votes2$voter_record == 22 &
+                                 votes2$ballot_position == "43A"],
+               "No Vote")
+  expect_equal(votes2$candidate[votes2$serial_number == "021745" &
+                                 votes2$location == "37-14" &
+                                 votes2$voter_record == 28 &
+                                 votes2$ballot_position == "43A"],
+               "No Vote")
+
+  expect_equal(votes$candidate[votes$serial_number == "022751" &
+                                 votes$location == "56-16" &
+                                 votes$voter_record == 34 &
+                                 votes$ballot_position == "43A"],
+               "No Vote")
+
+  expect_equal(votes$candidate[votes$serial_number == "022724" &
+                                 votes$location == "56-02" &
+                                 votes$voter_record == 17 &
+                                 votes$ballot_position == "43A"],
+               "No Vote")
+  expect_equal(votes$candidate[votes$serial_number == "022818" &
+                                 votes$location == "57-08" &
+                                 votes$voter_record == 51 &
+                                 votes$ballot_position == "43A"],
+               "No Vote")
 })
