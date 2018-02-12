@@ -12,7 +12,8 @@ Imports:
     dplyr,
     ggplot2,
     ggthemes,
-    scales
+    scales,
+    fastDummies
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

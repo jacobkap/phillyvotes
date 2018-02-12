@@ -1,7 +1,7 @@
 
 
-#results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-REP", TRUE)
-#results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-REP")
+#results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-DEM", TRUE)
+#results_barplot("JUDGE OF THE COURT OF COMMON PLEAS-DEM")
 results_barplot <- function(category, percent = FALSE) {
   df <- all_votes[all_votes$category %in% category, ]
   df <- aggregate(votes ~ candidate, data = df, FUN = sum)
@@ -30,7 +30,7 @@ results_barplot <- function(category, percent = FALSE) {
   }
 }
 
-#make_num_selected_graph("JUDGE OF THE COURT OF COMMON PLEAS-REP")
+#make_num_selected_graph("JUDGE OF THE SUPERIOR COURT-DEM")
 make_num_selected_graph <- function(category) {
   df <- all_votes[all_votes$category %in% category, ]
   df <- as.numeric(table(df$uniqueID))

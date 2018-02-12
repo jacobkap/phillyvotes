@@ -1,7 +1,7 @@
-philly_votes <- function(file.location){
+philly_votes <- function(file_location){
   ### Convert PDF to lines of text ###
   # suppressWarnings() simply hides and error that cannot be addressed but doesn't impact the output
-  doc <- suppressMessages(pdftools::pdf_text(file.location))
+  doc <- suppressMessages(pdftools::pdf_text(file_location))
   txt <- unlist(strsplit(doc, split = "\n"))
   txt <- trimws(txt)
 
@@ -22,8 +22,6 @@ philly_votes <- function(file.location){
   ballot.start <- as.numeric(ballot.loc)
   ballot.stop <- ballot.start + attributes(ballot.loc)$match.length
   ballot <- gsub("^[[:alpha:]]$", "", ballot)
-  ballot <- trimws(ballot)
-
 
   ### Serial Number ###
   serial.loc <- regexpr("[0-9]{6}", txt)
@@ -43,7 +41,6 @@ philly_votes <- function(file.location){
                      start = location.start,
                      stop = location.stop)
   # Method pulls extra space
-  location <- trimws(location)
 
   ### Voter Record ###
   record.loc <- regexpr("[0-9]+ OF +[0-9]+", txt)
@@ -63,7 +60,7 @@ philly_votes <- function(file.location){
   name <- substr(txt,
                  start = name.start,
                  stop = name.stop)
-  name <- trimws(name) # Trim trailing and leading spaces
+  name <- trimws(name)
   name <- gsub("(.*), (.*)", "\\2 \\1", name)
 
   ### Votes ###
@@ -84,44 +81,46 @@ philly_votes <- function(file.location){
   category <- substr(txt,
                      start = category.start,
                      stop = category.stop)
-  category <- trimws(category) # Trim trailing and leading spaces
 
   ### Merge Data ###
   # We haven't changed order, so observations will still line up properly
-  txt.data <- data.frame(location          = location,
+  data <- data.frame(location              = location,
                          serial_number     = serial,
                          voter_record      = record,
                          ballot_position   = ballot,
                          category          = category,
                          candidate         = name,
                          votes             = vote,
-                         stringsAsFactors = FALSE)
+                         stringsAsFactors  = FALSE)
+
+  data <- data.frame(sapply(data, trimws), stringsAsFactors = FALSE)
 
   # Turn "" into NA - mostly for dealing with them easier in R
-  txt.data <- data.frame(apply(txt.data, FUN = function(x) (ifelse(x == "", NA, x)), MARGIN = 2),
-                         stringsAsFactors = FALSE)
+  data <- data.frame(apply(data, FUN = function(x) (ifelse(x == "", NA, x)), MARGIN = 2),
+                     stringsAsFactors = FALSE)
 
   # Fill in relevant columns
   # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for
   #   filling in data based on order
-  txt.data$location <- zoo::na.locf(txt.data$location,
+  data$location <- zoo::na.locf(data$location,
                                     na.rm = FALSE)
-  txt.data$serial_number <- zoo::na.locf(txt.data$serial_number,
+  data$ward <- substr(data$location, 1, 2)
+  data$division <- substr(data$location, 4 ,5)
+  data$serial_number <- zoo::na.locf(data$serial_number,
                                          na.rm = FALSE)
-  txt.data$voter_record <- zoo::na.locf(txt.data$voter_record,
+  data$voter_record <- zoo::na.locf(data$voter_record,
                                         na.rm = FALSE)
-  txt.data$uniqueID   <-  paste(txt.data$location,
-                                txt.data$serial_number,
-                                txt.data$voter_record)
-  txt.data$file <- gsub(".*/", "", file.location)
+  data$uniqueID   <-  paste(data$serial_number,
+                                data$voter_record)
+  data$file <- gsub(".*/", "", file_location)
 
   # Remove uncessary rows
-  txt.data <- txt.data[!is.na(txt.data$votes), ]
+  data <- data[!is.na(data$votes), ]
 
   # Fix Format
-  txt.data$voter_record <- as.numeric(as.character(txt.data$voter_record))
-  txt.data$votes <- as.numeric(as.character(txt.data$votes))
+  data$voter_record <- as.numeric(as.character(data$voter_record))
+  data$votes <- as.numeric(as.character(data$votes))
 
-  return(txt.data)
+  return(data)
 
 }
