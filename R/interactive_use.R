@@ -27,4 +27,4 @@ philadelphia_votes <- function() {
   return(results)
 }
 
-# all_votes <- philadelphia_votes()
+ all_votes <- philadelphia_votes()
