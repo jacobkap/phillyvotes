@@ -11,43 +11,38 @@ philly_votes <- function(file_location){
   }
 
   ### Begin searches for searching for specific items ###
-  # These use regexpr() to find the starting and stopping location of each item followed by data cleaning to remove
+  # These use regexpr() to find the starting and stopping location of each
+  # item followed by data cleaning to remove
   #   extra text that may be pulled in addition to the text we actually want.
 
   ### Ballot Position ###
   # * in middle ensures full code is pulled
   ballot.loc <- regexpr("[0-9]*[A-Z]", txt)
   ballot <- regmatches(txt, ballot.loc)
-
-  ballot.start <- as.numeric(ballot.loc)
-  ballot.stop <- ballot.start + attributes(ballot.loc)$match.length
   ballot <- gsub("^[[:alpha:]]$", "", ballot)
+  ballot.stop <- ballot.loc + attributes(ballot.loc)$match.length
 
   ### Serial Number ###
   serial.loc <- regexpr("[0-9]{6}", txt)
-  serial.start <- as.numeric(serial.loc)
   # Since serial number should appear in first position, length is same as end position
   serial.stop <- attributes(serial.loc)$match.length
   serial <- substr(txt,
-                   start = serial.start,
+                   start = serial.loc,
                    stop = serial.stop)
 
   ### Voting Location ###
   location.loc <- regexpr(" [0-9][0-9]-[0-9][0-9]", txt)
-  location.start <- as.numeric(location.loc)
-  location.stop <- location.start +
+  location.stop <- location.loc +
                    attributes(location.loc)$match.length
   location <- substr(txt,
-                     start = location.start,
+                     start = location.loc,
                      stop = location.stop)
-  # Method pulls extra space
 
   ### Voter Record ###
   record.loc <- regexpr("[0-9]+ OF +[0-9]+", txt)
-  record.start <- as.numeric(record.loc)
-  record.stop <- record.start + attributes(record.loc)$match.length
+  record.stop <- record.loc + attributes(record.loc)$match.length
   record <- substr(txt,
-                   start = record.start,
+                   start = record.loc,
                    stop = record.stop)
   # Method pulls phrase preceeding voter record and extra space
   record <- gsub(" OF.*", "", record)
@@ -55,20 +50,18 @@ philly_votes <- function(file_location){
   ### Candidate Name ###
   # Need first A-Z for middle initial
   name.loc <- regexpr("([A-Z]+ )*[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO NO|YES SI|No Vote", txt)
-  name.start <- as.numeric(name.loc)
-  name.stop <- name.start + attributes(name.loc)$match.length
+  name.stop <- name.loc + attributes(name.loc)$match.length
   name <- substr(txt,
-                 start = name.start,
+                 start = name.loc,
                  stop = name.stop)
   name <- trimws(name)
   name <- gsub("(.*), (.*)", "\\2 \\1", name)
 
   ### Votes ###
   vote.loc <- regexpr("[0-9]$", txt)
-  vote.start <- as.numeric(vote.loc)
-  vote.stop <- vote.start + attributes(vote.loc)$match.length
+  vote.stop <- vote.loc + attributes(vote.loc)$match.length
   vote <- substr(txt,
-                 start = vote.start,
+                 start = vote.loc,
                  stop = vote.stop)
   # Make sure we only keep observations that make sense given the ballot information
   vote <- ifelse(ballot == "", "", vote)
@@ -77,7 +70,7 @@ philly_votes <- function(file_location){
   # Instead of search for some complex regular expression, we take advantage of all the other information we have found
   #   including the end of the item to the left and the start of the item to the right
   category.start <- ifelse(ballot == "", -1, ballot.stop + 1)
-  category.stop <- ifelse(ballot == "", -1, name.start - 1)
+  category.stop <- ifelse(ballot == "", -1, name.loc - 1)
   category <- substr(txt,
                      start = category.start,
                      stop = category.stop)
