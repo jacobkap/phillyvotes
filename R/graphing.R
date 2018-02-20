@@ -34,7 +34,7 @@ results_barplot <- function(data, office, percent = FALSE, top_n = 6) {
     geom_bar(stat = "identity") +
     coord_flip() +
     theme_minimal() +
-    ggtitle(category) +
+    ggtitle(office) +
     ylab(ylabel) +
     xlab("") +
     theme(axis.text.x=element_text(colour = "black")) +
@@ -49,8 +49,8 @@ results_barplot <- function(data, office, percent = FALSE, top_n = 6) {
 }
 
 #make_num_selected_graph("JUDGE OF THE SUPERIOR COURT-DEM")
-make_num_selected_graph <- function(data, category) {
-  df <- data[data$category %in% category, ]
+make_num_selected_graph <- function(data, office) {
+  df <- data[data$category %in% office, ]
   df <- as.numeric(table(df$uniqueID))
   df <- data.frame(table(df))
   names(df)[1] <- "number"
@@ -59,7 +59,7 @@ make_num_selected_graph <- function(data, category) {
   ggplot(data = df, aes(x = reorder(number, -percent), y = percent)) +
     geom_bar(stat = "identity") +
     theme_minimal() +
-    ggtitle(category, subtitle = "# Selected by Voters, by Percentage") +
+    ggtitle(categofficeory, subtitle = "# Selected by Voters, by Percentage") +
     xlab("Number of Selections Made") +
     ylab("%") +
     geom_text(aes(label= paste0(percent, "%")), color = "white", vjust = 1.1) +

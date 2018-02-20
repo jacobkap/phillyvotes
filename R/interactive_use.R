@@ -3,7 +3,6 @@
 # to select the folder with the voting files.
 
 philadelphia_votes <- function(folder = NULL) {
-
   if (is.null(folder)) {
     cat(paste("Please navigate to the folder with the voting files and select",
               "the files that you want. NOTE: selecting PDF files that are not voting",
@@ -17,36 +16,6 @@ philadelphia_votes <- function(folder = NULL) {
   }
   files <- files[grep("\\.PDF$", files, ignore.case = TRUE)]
 
-  results <- data.frame()
-  message(paste0("\nCollecting and organizing data now.\n\n",
-                 "This process may take up to 15 minutes. Please be patient. ",
-                 "Thank you."))
-
-  # Sets up progress bar
-  pb = txtProgressBar(min = 0, max = length(files), initial = 0)
-  for (i in seq_along(files)) {
-    results <- dplyr::bind_rows(results, philly_votes(files[i]))
-    setTxtProgressBar(pb, i)
-  }
-  rownames(results) <- 1:nrow(results)
-  return(results)
-}
-
-philadelphia_votes2 <- function(folder = NULL) {
-  if (is.null(folder)) {
-    cat(paste("Please navigate to the folder with the voting files and select",
-              "the files that you want. NOTE: selecting PDF files that are not voting",
-              "files may give wrong data!",
-              "\n\nA window should have opened where you can select the files from. If you",
-              "don't see it, try minimizing open windows on your screen (such as R).\n"))
-    files <- tcltk::tk_choose.files(default = "", caption = "Select files",
-                                    multi = TRUE, filters = NULL, index = 1)
-  } else {
-    files <- list.files(folder, full.names = TRUE)
-  }
-  files <- files[grep("\\.PDF$", files, ignore.case = TRUE)]
-
-  results <- data.frame()
   message(paste0("\nCollecting and organizing data now.\n\n",
                  "This process may take up to 15 minutes. Please be patient. ",
                  "Thank you."))
@@ -64,37 +33,6 @@ philadelphia_votes2 <- function(folder = NULL) {
   return(results)
 }
 
-philadelphia_votes3 <- function(folder = NULL) {
-  if (is.null(folder)) {
-    cat(paste("Please navigate to the folder with the voting files and select",
-              "the files that you want. NOTE: selecting PDF files that are not voting",
-              "files may give wrong data!",
-              "\n\nA window should have opened where you can select the files from. If you",
-              "don't see it, try minimizing open windows on your screen (such as R).\n"))
-    files <- tcltk::tk_choose.files(default = "", caption = "Select files",
-                                    multi = TRUE, filters = NULL, index = 1)
-  } else {
-    files <- list.files(folder, full.names = TRUE)
-  }
-  files <- files[grep("\\.PDF$", files, ignore.case = TRUE)]
 
-  results <- data.frame()
-  message(paste0("\nCollecting and organizing data now.\n\n",
-                 "This process may take up to 15 minutes. Please be patient. ",
-                 "Thank you."))
-
-  # Sets up progress bar
-  results <- data.frame(data.table::rbindlist(lapply(seq_along(files),function(x) philly_votes())))
-  rownames(results) <- 1:nrow(results)
-  return(results)
-}
-
-folder = "C:/Users/user/Dropbox/R_project/phillyvotes/small_data"
-system.time(all_votes <- philadelphia_votes(folder))
-system.time(all_votes2 <- philadelphia_votes2(folder))
-
-library(microbenchmark)
-microbenchmark(philadelphia_votes(folder), philadelphia_votes2(folder),
-               philadelphia_votes3(folder),
-               times = 1
-               )
+# folder = "C:/Users/user/Dropbox/R_project/phillyvotes/small_data"
+# all_votes <- philadelphia_votes(folder)
