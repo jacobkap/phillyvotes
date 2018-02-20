@@ -1,6 +1,9 @@
-categories = c("CITY CONTROLLER-DEM",
-             "DISTRICT ATTORNEY-DEM")
-conditional_table(all_votes, categories)
+categories = c(             "JUDGE OF THE COMMONWEALTH COURT-REP",
+                            "DISTRICT ATTORNEY-REP"
+)
+#cond <- conditional_table(all_votes, categories)
+#cond
+#save(cond, file = "cond.rda")
 
 conditional_table <- function(data, categories) {
   votes <- data[data$category %in% categories, c("candidate", "category",
