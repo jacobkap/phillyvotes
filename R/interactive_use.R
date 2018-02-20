@@ -34,5 +34,5 @@ philadelphia_votes <- function(folder = NULL) {
 }
 
 
-# folder = "C:/Users/user/Dropbox/R_project/phillyvotes/small_data"
+# folder = "C:/Users/user/Dropbox/R_project/phillyvotes/data"
 # all_votes <- philadelphia_votes(folder)

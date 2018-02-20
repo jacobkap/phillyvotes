@@ -1,17 +1,17 @@
-
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-                percent = TRUE)
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM")
-
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-                percent = TRUE, top_n = 3)
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-                top_n = 3)
-
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-                percent = TRUE, top_n = 15)
-results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-                top_n = 15)
+#
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
+#                 percent = TRUE)
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM")
+#
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
+#                 percent = TRUE, top_n = 3)
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
+#                 top_n = 3)
+#
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
+#                 percent = TRUE, top_n = 15)
+# results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
+#                 top_n = 15)
 
 results_barplot <- function(data, office, percent = FALSE, top_n = 6) {
 
