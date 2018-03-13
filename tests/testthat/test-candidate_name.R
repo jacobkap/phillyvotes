@@ -12,22 +12,22 @@ testing_file2 <- system.file("data",
 votes2 <- philly_votes(testing_file2)
 
 test_that("candidate name is in right order", {
-  expect_equal(votes$candidate[1], "DWAYNE WOODRUFF")
-  expect_equal(votes$candidate[9], "LAWRENCE J BOZZELLI")
-  expect_equal(votes$candidate[10], "GEORGE TWARDY")
-  expect_equal(votes$candidate[15], "BILL CAYE")
-  expect_equal(votes$candidate[20], "SHERMAN TOPPIN")
-  expect_equal(votes$candidate[23], "NO NO")
-  expect_equal(votes$candidate[24], "YES SI")
-  expect_equal(votes$candidate[25], "DWAYNE WOODRUFF")
+  expect_equal(votes$candidate[1], "Dwayne Woodruff")
+  expect_equal(votes$candidate[9], "Lawrence J Bozzelli")
+  expect_equal(votes$candidate[10], "George Twardy")
+  expect_equal(votes$candidate[15], "Bill Caye")
+  expect_equal(votes$candidate[20], "Sherman Toppin")
+  expect_equal(votes$candidate[23], "No No")
+  expect_equal(votes$candidate[24], "Yes Si")
+  expect_equal(votes$candidate[25], "Dwayne Woodruff")
 
   # last 6 votes
-  expect_equal(tail(votes$candidate), c("MARK B COHEN",
-                                        "MATT WOLF",
-                                        "MICHAEL W UNTERMEYER",
-                                        "REBECCA RHYNHART",
-                                        "DEBBIE KUNSELMAN",
-                                        "ELLEN CEISLER"))
+  expect_equal(tail(votes$candidate), c("Mark B Cohen",
+                                        "Matt Wolf",
+                                        "Michael W Untermeyer",
+                                        "Rebecca Rhynhart",
+                                        "Debbie Kunselman",
+                                        "Ellen Ceisler"))
 
 })
 
@@ -38,13 +38,13 @@ test_that("Candidate has right name", {
                                   votes2$location == "43-04" &
                                   votes2$voter_record == 1 &
                                   votes2$ballot_position == "33C"],
-               "MICHAEL A RIVERS SR")
+               "Michael A Rivers Sr")
 
   expect_equal(votes2$candidate[votes2$serial_number == "021454" &
                                   votes2$location == "33-07" &
                                   votes2$voter_record == 22 &
                                   votes2$ballot_position == "36F"],
-               "BILL E STREEPER JR")
+               "Bill E Streeper Jr")
 
   expect_false(all(grepl(",", votes$candidate)))
   expect_false(all(grepl(",", votes2$candidate)))

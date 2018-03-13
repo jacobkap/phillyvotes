@@ -27,6 +27,7 @@ results_barplot <- function(data, office,
 
   total_votes <- sum(df$votes)
   df <- df %>% dplyr::top_n(votes, n = top_n)
+  df$pretty_votes <- prettyNum(df$votes, big.mark = ",")
 
   ylabel <- "# of Votes"
   if (percent)  {
@@ -49,11 +50,11 @@ results_barplot <- function(data, office,
 
   if (percent) {
     p + ggplot2::geom_text(ggplot2::aes(label = paste0(votes, "%")),
-                           color = "white", hjust = 1.4,
+                           color = "white", hjust = 1.3,
                            size = 10)
   } else {
-    p + ggplot2::geom_text(ggplot2::aes(label = votes),
-                           color = "white", hjust = 1.4,
+    p + ggplot2::geom_text(ggplot2::aes(label = pretty_votes),
+                           color = "white", hjust = 1.3,
                            size = 10)
   }
 }

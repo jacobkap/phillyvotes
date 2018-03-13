@@ -60,7 +60,8 @@ conditional_table <- function(data, categories) {
   col_sums <- colSums(results)
   results_percent <- results
   for (i in 1:ncol(results_percent)) {
-    results_percent[, i] <- round(results_percent[, i] / col_sums[i], 3) * 100
+    results_percent[, i] <- round(results_percent[, i] /
+                                    col_sums[i], 3) * 100
   }
 
 
@@ -71,6 +72,8 @@ conditional_table <- function(data, categories) {
   rownames(results) <- cand_names
 
 
+  # prettifies results numbers - adds commas where appropriate
+  results[] <- sapply(results,  prettyNum, big.mark = ",")
   return(setNames(list(results, results_percent),
                   c("results", "results_percent")))
 
@@ -84,8 +87,11 @@ cont_to_categories <- function(.data) {
   temp[.data > 60 & .data <= 80] <- "61-80"
   temp[.data > 80 & .data <= 100] <- "81-100"
   .data <- temp
-  .data <- factor(.data, levels = c("0-20", "21-40", "41-60",
-                                    "61-80", "81-100"),
+  .data <- factor(.data, levels = c("0-20",
+                                    "21-40",
+                                    "41-60",
+                                    "61-80",
+                                    "81-100"),
                   labels = c("#ffffff",
                              "#bae4b3",
                              "#74c476",
@@ -96,7 +102,8 @@ cont_to_categories <- function(.data) {
 
 kablize <- function(results, results_percent, categories) {
   for (i in 1:ncol(results)) {
-    results[, i] <- kableExtra::cell_spec(results[, i], format = "html",
+    results[, i] <- kableExtra::cell_spec(results[, i],
+                                          format = "html",
                                           background = cont_to_categories(results_percent[, i]),
                                           color = "black",
                                           font_size = 20)
@@ -107,9 +114,11 @@ kablize <- function(results, results_percent, categories) {
 
   knitr::kable(results, "html", escape = F) %>%
     kableExtra::kable_styling("striped", full_width = F) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+    kableExtra::kable_styling(bootstrap_options =
+                                c("striped", "hover")) %>%
     kableExtra::add_header_above(header) %>%
-    kableExtra::footnote(general = paste0("Cells are color-coded by what proportion ",
+    kableExtra::footnote(general =
+                           paste0("Cells are color-coded by what proportion ",
                                           "of voters in that column voted for the ",
                                           "row's candidate. For example, a dark green ",
                                           "in row 1 column 2 means that many people ",
@@ -122,24 +131,27 @@ kablize <- function(results, results_percent, categories) {
 
 library(ggplot2); library(gridExtra); library(grid)
 make_legend <- function() {
-legend_data <- data.frame(Shading = c("0-20%", "21-40%", "41-60%", "61-80%", "81-100%"),
+legend_data <- data.frame(Shading = c("0-20%",
+                                      "21-40%",
+                                      "41-60%",
+                                      "61-80%",
+                                      "81-100%"),
                           colors = c("#ffffff",
                                      "#bae4b3",
                                      "#74c476",
                                      "#31a354",
                                      "#006d2c"))
-my_hist <- ggplot(legend_data, aes(colors, fill = Shading)) + geom_bar() +
+my_hist <- ggplot(legend_data, aes(colors, fill = Shading)) +
+  geom_bar() +
   scale_fill_manual(values = c("#ffffff",
                                "#bae4b3",
                                "#74c476",
                                "#31a354",
                                "#006d2c"),
                     name = "Meaning of Shading") +
-  theme(legend.position = c(0,1),
-        legend.justification = c(0, 0),
-        legend.direction = "horizontal",
-        legend.title = element_text(size = 10),
-        legend.text = element_text(size = 9))
+  theme_bw(base_size = 25)
+
+
 
 #Extract Legend
 g_legend <- function(a.gplot){
@@ -149,8 +161,7 @@ g_legend <- function(a.gplot){
   return(legend)}
 
 legend <- g_legend(my_hist)
+grid.draw(legend)
 grid.arrange(legend,
-             heights=c(1, 1),widths =c(1,4,1))
-
+             heights=c(1, 1),widths =c(3,4,1))
 }
-

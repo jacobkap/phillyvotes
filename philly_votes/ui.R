@@ -2,7 +2,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                   # Application title
                   navbarPage("Philadelphia 2017 Primary Election",
-                             tabPanel("Results Graph",
+                             tabPanel("Election Results",
                                       # Sidebar with a slider input for number of bins
 
                                       sidebarLayout(
@@ -19,7 +19,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                         mainPanel(
                                           plotOutput("results_plot")
                                         ))),
-                             tabPanel("Votes per Office",
+                             tabPanel("Choices per Office",
                                       # Sidebar with a slider input for number of bins
 
                                       sidebarLayout(

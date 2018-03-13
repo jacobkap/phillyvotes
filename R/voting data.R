@@ -1,6 +1,7 @@
 philly_votes <- function(file_location){
   ### Convert PDF to lines of text ###
-  # suppressWarnings() simply hides and error that cannot be addressed but doesn't impact the output
+  # suppressWarnings() simply hides and error that cannot be
+  # addressed but doesn't impact the output
   doc <- suppressMessages(pdftools::pdf_text(file_location))
   txt <- unlist(strsplit(doc, split = "\n"))
   txt <- trimws(txt)
@@ -24,7 +25,8 @@ philly_votes <- function(file_location){
 
   ### Serial Number ###
   serial.loc <- regexpr("[0-9]{6}", txt)
-  # Since serial number should appear in first position, length is same as end position
+  # Since serial number should appear in first position,
+  # length is same as end position
   serial.stop <- attributes(serial.loc)$match.length
   serial <- substr(txt,
                    start = serial.loc,
@@ -88,8 +90,21 @@ philly_votes <- function(file_location){
 
   data <- data.frame(sapply(data, trimws), stringsAsFactors = FALSE)
 
+
+  # Makes category and candidate have proper capitalization
+  # - original was all caps
+  data$category <- sapply(data$category, simpleCap)
+  data$category <- gsub("-dem", "-Dem", data$category)
+  data$category <- gsub("-rep", "-Rep", data$category)
+  data$candidate <- sapply(data$candidate, simpleCap)
+
+
   # Turn "" into NA - mostly for dealing with them easier in R
-  data <- data.frame(apply(data, FUN = function(x) (ifelse(x == "", NA, x)), MARGIN = 2),
+  data <- data.frame(apply(data, FUN = function(x) (ifelse(x %in%
+                                                    c("", "NANA"),
+                                                           NA,
+                                                           x)),
+                           MARGIN = 2),
                      stringsAsFactors = FALSE)
 
   # Fill in relevant columns
@@ -116,4 +131,15 @@ philly_votes <- function(file_location){
 
   return(data)
 
+}
+
+simpleCap <- function(words) {
+  words <- tolower(words)
+  words <- strsplit(words, " ")[[1]]
+  words <- paste(toupper(substring(words, 1,1)),
+                 substring(words, 2),
+        sep = "", collapse = " ")
+  words <- gsub("Of", "of", words)
+  words <- gsub("The", "the", words)
+  return(words)
 }

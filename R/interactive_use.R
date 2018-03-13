@@ -17,8 +17,8 @@ philadelphia_votes <- function(folder = NULL) {
   files <- files[grep("\\.PDF$", files, ignore.case = TRUE)]
 
   message(paste0("\nCollecting and organizing data now.\n\n",
-                 "This process may take up to 15 minutes. Please be patient. ",
-                 "Thank you."))
+                 "This process may take up to 20 minutes. ",
+                 "Please be patient. Thank you."))
 
   # Sets up progress bar
   pb = txtProgressBar(min = 0, max = length(files), initial = 0)
@@ -34,10 +34,13 @@ philadelphia_votes <- function(folder = NULL) {
 }
 
 
-# folder = "C:/Users/user/Dropbox/R_project/phillyvotes/data"
-# all_votes <- philadelphia_votes(folder)
-# all_votes <- all_votes[!all_votes$category %in% unique(grep("INSPECTOR|JUDGE OF ELECTION",
-#                                                     unique(all_votes$category),
-#                                                     value = TRUE)), ]
-# all_votes <- all_votes[!is.na(all_votes$category), ]
-# all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
+ # folder = "C:/Users/user/Dropbox/R_project/phillyvotes/data"
+ # all_votes <- philadelphia_votes(folder)
+ # all_votes <- all_votes[!all_votes$category %in%
+ #                          unique(grep("INSPECTOR|JUDGE OF ELECTION",
+ #                                  unique(all_votes$category),
+ #                                                      value = TRUE,
+ #                                  ignore.case = TRUE)), ]
+ #  all_votes <- all_votes[!is.na(all_votes$category), ]
+ #  all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
+ #  save(all_votes, file = "all_votes.rda")
