@@ -105,7 +105,7 @@ kablize <- function(results, results_percent, categories) {
     results[, i] <- kableExtra::cell_spec(results[, i],
                                           format = "html",
                                           background = cont_to_categories(results_percent[, i]),
-                                          color = "black",
+                                          color = ifelse(results_percent[, i] > 60, "white", "black"),
                                           font_size = 20)
   }
 
@@ -148,8 +148,9 @@ my_hist <- ggplot(legend_data, aes(colors, fill = Shading)) +
                                "#74c476",
                                "#31a354",
                                "#006d2c"),
-                    name = "Meaning of Shading") +
-  theme_bw(base_size = 25)
+                    name = "") +
+  theme_bw(base_size = 25) #+
+  #theme(legend.position = "bottom")
 
 
 
@@ -163,5 +164,5 @@ g_legend <- function(a.gplot){
 legend <- g_legend(my_hist)
 grid.draw(legend)
 grid.arrange(legend,
-             heights=c(1, 1),widths =c(3,4,1))
+             heights = c(1, 1),widths = c(3,4,1))
 }

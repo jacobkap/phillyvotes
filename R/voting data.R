@@ -14,7 +14,8 @@ philly_votes <- function(file_location){
   ### Begin searches for searching for specific items ###
   # These use regexpr() to find the starting and stopping location of each
   # item followed by data cleaning to remove
-  #   extra text that may be pulled in addition to the text we actually want.
+  #   extra text that may be pulled in addition to the text we
+  # actually want.
 
   ### Ballot Position ###
   # * in middle ensures full code is pulled
@@ -65,12 +66,14 @@ philly_votes <- function(file_location){
   vote <- substr(txt,
                  start = vote.loc,
                  stop = vote.stop)
-  # Make sure we only keep observations that make sense given the ballot information
+  # Make sure we only keep observations that make sense given the
+  # ballot information
   vote <- ifelse(ballot == "", "", vote)
 
   ### Category ###
   # Instead of search for some complex regular expression, we take advantage of all the other information we have found
-  #   including the end of the item to the left and the start of the item to the right
+  #   including the end of the item to the left and the start of
+  # the item to the right
   category.start <- ifelse(ballot == "", -1, ballot.stop + 1)
   category.stop <- ifelse(ballot == "", -1, name.loc - 1)
   category <- substr(txt,
@@ -108,7 +111,8 @@ philly_votes <- function(file_location){
                      stringsAsFactors = FALSE)
 
   # Fill in relevant columns
-  # na.locf take the first non-NA value of an object and then fills it foward until the next non-NA value. great for
+  # na.locf take the first non-NA value of an object and then
+  # fills it foward until the next non-NA value. great for
   #   filling in data based on order
   data$location <- zoo::na.locf(data$location,
                                     na.rm = FALSE)
