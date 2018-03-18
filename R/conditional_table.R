@@ -1,7 +1,6 @@
 # categories = c("JUDGE OF THE COMMONWEALTH COURT-DEM")
 # x = conditional_table(all_votes, categories)
 # kablize(x$results, x$results_percent, categories)
-library(dplyr)
 conditional_table <- function(data, categories) {
   votes <- data %>% dplyr::filter(category == categories) #  & tolower(candidate) != "write in"
 
