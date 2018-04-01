@@ -5,6 +5,6 @@ account: kaplan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 301587
-bundleId: 1274750
+bundleId: 1277056
 url: https://kaplan.shinyapps.io/philadelphia_votes/
-when: 1521383450.38504
+when: 1521491112.15058

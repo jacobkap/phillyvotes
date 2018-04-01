@@ -8,11 +8,13 @@ shinyServer(function(input, output) {
   })
 
   output$num_voters_graph <- renderPlot({
-    num_selected_graph(data = all_votes, office = input$num_office)
+
+    num_selected[[input$num_office]]
+
   })
 
   output$conditional_table <- function() {
-    cond_table = conditional_table(all_votes, input$cond_office)
+    cond_table = cond_tables[[input$cond_office]]
     kablize(cond_table$results, cond_table$results_percent, input$cond_office)
   }
 

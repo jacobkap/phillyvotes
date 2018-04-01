@@ -55,33 +55,39 @@ results_barplot <- function(data, office,
   } else {
     p + ggplot2::geom_text(ggplot2::aes(label = pretty_votes),
                            color = "white", hjust = 1.3,
-                           size = 10)
+                           size = 9)
   }
+  return(p)
 }
 
- #num_selected_graph(all_votes, "JUDGE OF THE SUPERIOR COURT-DEM")
-num_selected_graph <- function(data, office) {
-  df <- data %>% dplyr::filter(category == office  & tolower(candidate) != "write in") %>%
-    group_by(uniqueID) %>%
-    summarize(count = n()) %>%
-    group_by(count) %>%
-    tally()
+#num_selected_graph(all_votes, "JUDGE OF THE SUPERIOR COURT-DEM")
+num_selected_graph <- function(data = NULL, df = NULL, office) {
+  if (is.null(df)) {
+    df <- data %>% dplyr::filter(category == office  &
+                                   tolower(candidate) != "write in") %>%
+      group_by(uniqueID) %>%
+      summarize(count = n()) %>%
+      group_by(count) %>%
+      tally()
+  }
 
   df$percent <- round((df$n / sum(df$n) * 100))
 
-  ggplot2::ggplot(data = df, ggplot2::aes(x = reorder(count, -percent), y = percent)) +
+  p <-  ggplot2::ggplot(data = df, ggplot2::aes(x = reorder(count, -percent), y = percent)) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::theme_minimal() +
     ggplot2::ggtitle(office, subtitle = paste0("Max number of selections: ", max(df$count))) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = 20,
                                                       face = "bold")) +
     ggplot2::theme(plot.subtitle = ggplot2::element_text(size = 15,
-                                                      face = "bold")) +
+                                                         face = "bold")) +
     ggplot2::xlab("Number of Selections Made") +
     ggplot2::ylab("%") +
     ggplot2::geom_text(ggplot2::aes(label = paste0(percent, "%")),
                        color = "white", vjust = 1.5, size = 7.5) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(colour = "black", size = 16)) +
     ggplot2::theme(axis.text.y = ggplot2::element_text(colour = "black", size = 16))
+
+  return(p)
 
 }

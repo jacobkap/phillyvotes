@@ -1,5 +1,5 @@
 # File to deploy shiny app
-
-deployApp(appFiles = c("R/", "all_votes.rda",
+library(rsconnect)
+deployApp(appFiles = c("R/", "shiny_data/",
                        "server.R", "ui.R", "global.R"),
           appTitle = "Philadelphia Votes")

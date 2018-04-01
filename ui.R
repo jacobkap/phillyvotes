@@ -25,7 +25,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                       sidebarLayout(
                                         sidebarPanel(
                                           selectInput("num_office", label = h3("Select a ballot position"),
-                                                      choices = sort(unique(all_votes$category)))
+                                                      choices = sort(unique(names(num_selected))))
                                         ),
 
                                         # Show a plot of the generated distribution
@@ -40,7 +40,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                       sidebarLayout(
                                         sidebarPanel(
                                           selectInput("cond_office", label = h3("Select a ballot position"),
-                                                      choices = sort(unique(all_votes$category))),
+                                                      choices = sort(unique(names(num_selected)))),
                                           h4("This table shows the number of people
                                     who voted each candidate conditional
                                     on voting for another candidate."),

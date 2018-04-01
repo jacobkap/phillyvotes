@@ -1,8 +1,13 @@
-# categories = c("JUDGE OF THE COMMONWEALTH COURT-DEM")
-# x = conditional_table(all_votes, categories)
-# kablize(x$results, x$results_percent, categories)
+# cond_table_final(all_votes, "Judge of the Commonwealth Court-Dem")
+
+cond_table_final <- function(data, category) {
+  cond_table <- conditional_table(data, category)
+  kablize(cond_table$results, cond_table$results_percent, category)
+}
+
 conditional_table <- function(data, categories) {
-  votes <- data %>% dplyr::filter(category == categories) #  & tolower(candidate) != "write in"
+  votes <- data %>% dplyr::filter(category %in% categories)
+    #,tolower(candidate) != "write in"
 
   votes$candidate <- gsub(" ", "_", votes$candidate)
   votes <- fastDummies::dummy_cols(votes, select_columns = "candidate")
@@ -128,7 +133,6 @@ kablize <- function(results, results_percent, categories) {
 }
 
 
-library(ggplot2); library(gridExtra); library(grid)
 make_legend <- function() {
 legend_data <- data.frame(Shading = c("0-20%",
                                       "21-40%",
