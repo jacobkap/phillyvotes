@@ -14,7 +14,8 @@
 # results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
 #                 top_n = 15)
 
-results_barplot <- function(data, office,
+results_barplot <- function(data,
+                            office,
                             percent = FALSE,
                             top_n = 6) {
 

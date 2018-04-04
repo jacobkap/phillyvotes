@@ -43,44 +43,4 @@ philadelphia_votes <- function(folder = NULL) {
 #  all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
 #  save(all_votes, file = "all_votes.rda")
 
-# JUDGE OF THE MUNICIPAL COURT-REP
-# This produces a vector of the names of offices where a person can vote for
-# more than one candidate - useful for making the options a user can select
-# for the num_selected_graph
-num_selected_prep <- function(data) {
-  num_selected <- list()
-  for (office in unique(data$category)) {
-    temp <- data %>% dplyr::filter(category == office  &
-                                     tolower(candidate) != "write in") %>%
-      group_by(uniqueID) %>%
-      summarize(count = n()) %>%
-      group_by(count) %>%
-      tally()
-    if (nrow(temp) > 1) {
-      num_selected[[length(num_selected) + 1]] <-
-        num_selected_graph(df = temp,
-                           office = office)
-      names(num_selected)[length(num_selected)] <- office
-    }
-  }
-  return(num_selected)
-}
-# num_selected <- num_selected_prep(all_votes)
-# save(num_selected, file = "num_selected.rda")
-
-
-
-# setwd("C:/Users/user/Dropbox/R_project/phillyvotes/shiny_data")
-# cond_tables <- cond_table_prep(all_votes)
-# save(cond_tables, file = "cond_tables.rda")
-cond_table_prep <- function(data) {
-  cond_tables <- list()
-  for (office in names(num_selected)) {
-    cond_table <- conditional_table(data, office)
-
-    cond_tables[[length(cond_tables) + 1]] <- cond_table
-    names(cond_tables)[length(cond_tables)] <- office
-  }
-  return(cond_tables)
-}
 

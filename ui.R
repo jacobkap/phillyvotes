@@ -1,7 +1,7 @@
 shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                   # Application title
-                  navbarPage("Philadelphia 2017 Primary Election",
+                  navbarPage("Philadelphia Election Results Tool",
                              tabPanel("Election Results",
                                       # Sidebar with a slider input for number of bins
 
@@ -9,9 +9,8 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                         sidebarPanel(
                                           selectInput("results_office", label = h3("Select a ballot position"),
                                                       choices = sort(unique(all_votes$category))),
-                                          sliderInput("num_of_results",
-                                                      label = h3("Number of candidates to show"), min = 1,
-                                                      max = 10, value = 6),
+                                          uiOutput("num_of_results"),
+
                                           checkboxInput("percent", label = "Show Percent of Votes", value = FALSE)
                                         ),
 
@@ -34,7 +33,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                         )
                                       )
                              ),
-                             tabPanel("Conditional Table",
+                             tabPanel("Candidate Combinations",
                                       # Sidebar with a slider input for number of bins
 
                                       sidebarLayout(
