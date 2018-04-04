@@ -151,9 +151,9 @@ my_hist <- ggplot(legend_data, aes(colors, fill = Shading)) +
                                "#74c476",
                                "#31a354",
                                "#006d2c"),
-                    name = "") +
-  theme_bw(base_size = 25) #+
-  #theme(legend.position = "bottom")
+                    name = "% Common Vote") +
+  theme_bw(base_size = 25) +
+  theme(legend.direction = "horizontal")
 
 
 
@@ -167,5 +167,5 @@ g_legend <- function(a.gplot){
 legend <- g_legend(my_hist)
 grid.draw(legend)
 grid.arrange(legend,
-             heights = c(1, 1),widths = c(3,4,1))
+             heights = c(1, 1),widths = c(3,4,-4))
 }

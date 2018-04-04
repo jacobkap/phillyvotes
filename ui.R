@@ -58,8 +58,8 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                                         # Show a plot of the generated distribution
                                         mainPanel(
-                                          tableOutput("conditional_table"),
-                                          plotOutput("cond_legend")
+                                          plotOutput("cond_legend", height = "45px"),
+                                          tableOutput("conditional_table")
                                         )
                                       )
                              )
