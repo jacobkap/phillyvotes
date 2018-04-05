@@ -1,7 +1,6 @@
 #
 # results_barplot(data = all_votes,
-#                 office = "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
-#                 percent = TRUE)
+#                 office = "City Controller-Dem")
 # results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM")
 #
 # results_barplot(all_votes, "JUDGE OF THE COURT OF COMMON PLEAS-DEM",
@@ -36,7 +35,8 @@ results_barplot <- function(data,
     ylabel <- "% of Votes"
   }
 
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = reorder(candidate, votes), y = votes)) +
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = reorder(candidate, votes),
+                                        y = votes)) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::coord_flip() +
     ggplot2::theme_minimal() +
@@ -45,19 +45,24 @@ results_barplot <- function(data,
                                                       face = "bold")) +
     ggplot2::ylab(ylabel) +
     ggplot2::xlab("") +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(colour = "black", size = 16)) +
-    ggplot2::theme(axis.text.y = ggplot2::element_text(colour = "black", size = 16))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(colour = "black",
+                                                       size = 15)) +
+    ggplot2::theme(axis.text.y = ggplot2::element_text(colour = "black",
+                                                       size = 15)) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::theme(text = ggplot2::element_text(size = 15))
 
 
-  if (percent) {
-    p + ggplot2::geom_text(ggplot2::aes(label = paste0(votes, "%")),
-                           color = "white", hjust = 1.3,
-                           size = 10)
-  } else {
-    p + ggplot2::geom_text(ggplot2::aes(label = pretty_votes),
-                           color = "white", hjust = 1.3,
-                           size = 9)
-  }
+  # if (percent) {
+  #   p <- p + ggplot2::geom_text(ggplot2::aes(label = paste0(votes, "%")),
+  #                          color = "white", hjust = 1.25,
+  #                          size = 10)
+  # } else {
+  #   p <- p + ggplot2::geom_text(ggplot2::aes(label = pretty_votes),
+  #                          color = "white", hjust = 1.25,
+  #                          size = 9) +
+  #     ggplot2::scale_x_continuous(labels = scales::comma)
+  # }
   return(p)
 }
 
@@ -85,7 +90,7 @@ num_selected_graph <- function(data = NULL, df = NULL, office) {
     ggplot2::xlab("Number of Selections Made") +
     ggplot2::ylab("%") +
     ggplot2::geom_text(ggplot2::aes(label = paste0(percent, "%")),
-                       color = "white", vjust = 1.5, size = 7.5) +
+                       color = "white", vjust = 1.5, size = 8.5) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(colour = "black", size = 16)) +
     ggplot2::theme(axis.text.y = ggplot2::element_text(colour = "black", size = 16))
 

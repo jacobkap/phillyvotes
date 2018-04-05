@@ -32,15 +32,16 @@ philadelphia_votes <- function(folder = NULL) {
   rownames(results) <- 1:nrow(results)
   return(results)
 }
-# folder = "C:/Users/user/Dropbox/R_project/phillyvotes/data"
-# all_votes <- philadelphia_votes(folder)
-# all_votes <- all_votes[!all_votes$category %in%
-#                          unique(grep("INSPECTOR|JUDGE OF ELECTION",
-#                                  unique(all_votes$category),
-#                                                      value = TRUE,
-#                                  ignore.case = TRUE)), ]
-#  all_votes <- all_votes[!is.na(all_votes$category), ]
-#  all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
-#  save(all_votes, file = "all_votes.rda")
+folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data"
+all_votes <- philadelphia_votes(folder)
+all_votes <- all_votes[!all_votes$category %in%
+                         unique(grep("INSPECTOR|JUDGE OF ELECTION",
+                                 unique(all_votes$category),
+                                                     value = TRUE,
+                                 ignore.case = TRUE)), ]
+ all_votes <- all_votes[!is.na(all_votes$category), ]
+ all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
+ setwd("C:/Users/user/Dropbox/R_project/phillyvotes/shiny_data")
+ save(all_votes, file = "all_votes.rda")
 
 

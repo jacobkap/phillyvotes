@@ -97,8 +97,8 @@ philly_votes <- function(file_location){
   # Makes category and candidate have proper capitalization
   # - original was all caps
   data$category <- sapply(data$category, simpleCap)
-  data$category <- gsub("-dem", "-Dem", data$category)
-  data$category <- gsub("-rep", "-Rep", data$category)
+  data$category <- gsub("-dem", "-Democrat", data$category)
+  data$category <- gsub("-rep", "-Republican", data$category)
   data$candidate <- sapply(data$candidate, simpleCap)
 
 

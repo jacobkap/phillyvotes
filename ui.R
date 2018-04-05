@@ -40,15 +40,15 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                         sidebarPanel(
                                           selectInput("cond_office", label = h3("Select a ballot position"),
                                                       choices = sort(unique(names(num_selected)))),
-                                          h4("This table shows the number of people
-                                    who voted each candidate conditional
+                                          h5("This table shows the number of people
+                                    who voted for each candidate conditional
                                     on voting for another candidate."),
                                           br(),
-                                          h4("When a candidate column aligns with that
+                                          h5("When a candidate column aligns with that
                                     candidate's row, that shows how many people
                                     voted for only that candidate."),
                                           br(),
-                                           h4("For example,
+                                           h5("For example,
                                     row 1 column 1 shows how many people only voted for
                                     that candidate. Row 1 column 2 shows how many people
                                     voted for the candidate in column 2 who ALSO voted
