@@ -11,27 +11,27 @@ votes2 <- philly_votes(testing_file2)
 
 
 test_that("categories are in the right order", {
-  expect_equal(votes$category[1], "Justice of the Supreme Court-Democrat")
-  expect_equal(votes$category[2], "Judge of the Superior Court-Democrat")
-  expect_equal(votes$category[3], "Judge of the Superior Court-Democrat")
-  expect_equal(votes$category[4], "Judge of the Superior Court-Democrat")
-  expect_equal(votes$category[5], "Judge of the Commonwealth Court-Democrat")
-  expect_equal(votes$category[10], "Judge of the Municipal Court-Democrat")
-  expect_equal(votes$category[11], "District Attorney-Democrat")
-  expect_equal(votes$category[12], "City Controller-Democrat")
-  expect_equal(votes$category[13], "Judge of Election-Democrat-56-01")
-  expect_equal(votes$category[14], "Inspector of Election-Democrat-56-01")
-  expect_equal(votes$category[15], "Judge of the Superior Court-Democrat")
+  expect_equal(votes$category[1], "Justice of the Supreme Court - Democrat")
+  expect_equal(votes$category[2], "Judge of the Superior Court - Democrat")
+  expect_equal(votes$category[3], "Judge of the Superior Court - Democrat")
+  expect_equal(votes$category[4], "Judge of the Superior Court - Democrat")
+  expect_equal(votes$category[5], "Judge of the Commonwealth Court - Democrat")
+  expect_equal(votes$category[10], "Judge of the Municipal Court - Democrat")
+  expect_equal(votes$category[11], "District Attorney - Democrat")
+  expect_equal(votes$category[12], "City Controller - Democrat")
+  expect_equal(votes$category[13], "Judge of Election - Democrat-56-01")
+  expect_equal(votes$category[14], "Inspector of Election - Democrat-56-01")
+  expect_equal(votes$category[15], "Judge of the Superior Court - Democrat")
 
 
   # last 6 votes
   expect_equal(tail(votes$category),
-               c("Judge of the Court of Common Pleas-Democrat",
-                 "Judge of the Municipal Court-Democrat",
-                 "District Attorney-Democrat",
-                 "City Controller-Democrat",
-                 "Judge of the Superior Court-Democrat",
-                 "Judge of the Commonwealth Court-Democrat"))
+               c("Judge of the Court of Common Pleas - Democrat",
+                 "Judge of the Municipal Court - Democrat",
+                 "District Attorney - Democrat",
+                 "City Controller - Democrat",
+                 "Judge of the Superior Court - Democrat",
+                 "Judge of the Commonwealth Court - Democrat"))
 })
 
 test_that("Categories have correct name", {
@@ -40,13 +40,13 @@ test_that("Categories have correct name", {
                                  votes2$location == "43-04" &
                                  votes2$voter_record == 1 &
                                  votes2$ballot_position == "33C"],
-               "Judge of Election-Democrat-43-04")
+               "Judge of Election - Democrat-43-04")
 
   expect_equal(votes2$category[votes2$serial_number == "021454" &
                                  votes2$location == "33-07" &
                                  votes2$voter_record == 22 &
                                  votes2$ballot_position == "36F"],
-               "Inspector of Election-Republican-33-07")
+               "Inspector of Election - Republican-33-07")
 })
 
 test_that("Write In ballots have correct category", {
@@ -55,37 +55,37 @@ test_that("Write In ballots have correct category", {
                                 votes$voter_record == 10  &
                                 votes$ballot_position == "22G" &
                                 votes$candidate == "Write In"],
-               "Judge of the Court of Common Pleas-Republican")
+               "Judge of the Court of Common Pleas - Republican")
   expect_equal(votes$category[votes$serial_number == "022883" &
                                 votes$location == "58-13" &
                                 votes$voter_record == 28 &
                                 votes$ballot_position == "35G" &
                                 votes$candidate == "Write In"],
-               "Judge of Election-Republican-58-13")
+               "Judge of Election - Republican-58-13")
   expect_equal(votes$category[votes$serial_number == "022889" &
                                 votes$location == "58-16" &
                                 votes$voter_record == 5 &
                                 votes$ballot_position == "35E" &
                                 votes$candidate == "Write In"],
-               "Judge of Election-Democrat-58-16")
+               "Judge of Election - Democrat-58-16")
   expect_equal(votes$category[votes$serial_number == "022889" &
                                 votes$location == "58-16" &
                                 votes$voter_record == 5 &
                                 votes$ballot_position == "38E" &
                                 votes$candidate == "Write In"],
-               "Inspector of Election-Democrat-58-16")
+               "Inspector of Election - Democrat-58-16")
   expect_equal(votes2$category[votes2$serial_number == "020303" &
                                  votes2$location == "07-14" &
                                  votes2$voter_record == 12 &
                                  votes2$ballot_position == "29E" &
                                  votes2$candidate == "Write In"],
-               "District Attorney-Democrat")
+               "District Attorney - Democrat")
   expect_equal(votes2$category[votes2$serial_number == "020320" &
                                  votes2$location == "07-22" &
                                  votes2$voter_record == 6 &
                                  votes2$ballot_position == "35E" &
                                  votes2$candidate == "Write In"],
-               "Judge of Election-Democrat-07-22")
+               "Judge of Election - Democrat-07-22")
 
 })
 
