@@ -1,10 +1,10 @@
- # setwd("C:/Users/user/Dropbox/R_project/phillyvotes/shiny_data")
- # results_prep <- results_prep_func(all_votes)
- # num_selected <- num_selected_prep(all_votes)
- # cond_tables <- cond_table_prep(all_votes)
- # save(results_prep, file = "results_prep.rda")
- # save(num_selected, file = "num_selected.rda")
- # save(cond_tables, file = "cond_tables.rda")
+# setwd("C:/Users/user/Dropbox/R_project/phillyvotes/shiny_data")
+# results_prep <- results_prep_func(all_votes)
+# num_selected <- num_selected_prep(all_votes)
+# cond_tables <- cond_table_prep(all_votes)
+# save(results_prep, file = "results_prep.rda")
+# save(num_selected, file = "num_selected.rda")
+# save(cond_tables, file = "cond_tables.rda")
 
 
 
@@ -57,8 +57,13 @@ results_prep_func <- function(data) {
       dplyr::group_by(candidate) %>%
       dplyr::summarise(votes = n()) %>%
       dplyr::arrange(desc(votes))
+    names(df) <- c("label", "y")
     results_prep$max_candidates[results_prep$Office == office] <- nrow(df)
   }
   return(results_prep)
 }
+
+
+
+
 

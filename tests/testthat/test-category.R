@@ -1,13 +1,12 @@
 context("values in 'category' are correct - order and total count")
 
-testing_file <- system.file("data",
-                            "2017 Primary - Black BIR 1.pdf",
-                            package = "phillyvotes")
-votes <- philly_votes(testing_file)
-testing_file2 <- system.file("data",
-                             "2017 Primary - YELLOW BIR.pdf",
-                             package = "phillyvotes")
-votes2 <- philly_votes(testing_file2)
+primary_2017_black1 <- system.file("data/PDF_data/2017 Primary", "2017 Primary - Black BIR 1.pdf",
+                                   package = "phillyvotes")
+votes <- philly_votes(primary_2017_black1)
+primary_2017_yellow <- system.file("data",
+                                   "2017 Primary - YELLOW BIR.pdf",
+                                   package = "phillyvotes")
+votes2 <- philly_votes(primary_2017_yellow)
 
 
 test_that("categories are in the right order", {

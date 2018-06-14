@@ -1,11 +1,17 @@
-# cond_table_final(all_votes, "Judge of the Commonwealth Court-Dem")
-
-cond_table_final <- function(data, category) {
-  cond_table <- conditional_table(data, category)
-  kablize(cond_table$results, cond_table$results_percent, category)
+# cond_table_final(all_votes, "Judge of the Commonwealth Court - Democrat")
+library(dplyr)
+cond_table_final <- function(data, categories, location = "All", num_choices = "All") {
+  cond_table <- conditional_table(data, categories, location = location, num_choices = num_choices)
+  kablize(cond_table$results, cond_table$results_percent, categories, cond_table$max_possible_votes)
 }
 
-conditional_table <- function(data, categories) {
+conditional_table <- function(data, categories, location = "All", num_choices = "All") {
+  if (location != "All") {
+    data <-
+      data %>%
+      filter(ward == location)
+  }
+
   votes <- data %>% dplyr::filter(category %in% categories)
     #,tolower(candidate) != "write in"
 
@@ -19,7 +25,19 @@ conditional_table <- function(data, categories) {
     summarise_at(candidate_cols,
                  .funs = "sum")
   unique_votes$uniqueID <- NULL
+
+  # Shows how many people that voter voted for
+  unique_votes$total_votes <-  rowSums(unique_votes)
+  max_possible_votes <- max(unique_votes$total_votes)
+
+  if (any(num_choices != "All")) {
+    unique_votes <-
+      unique_votes %>%
+      filter(total_votes <= max(num_choices))
+  }
+
   names(unique_votes) <- gsub("\\s", "_", names(unique_votes))
+
 
   # Make the table
   results <- data.frame(matrix(nrow = length(candidate_cols),
@@ -43,12 +61,13 @@ conditional_table <- function(data, categories) {
                                       names(unique_votes))))
 
 
-  # Shows how many people that voter voted for
+
   candidates <- names(unique_votes)
-  unique_votes$total_votes <-  rowSums(unique_votes)
+
 
   # Shows how many votes the candidate got among those who only vote for that
   # candidate
+  unique_votes$total_votes <-  rowSums(unique_votes)
   for (temp_cand in candidates) {
     temp_cand_short <- gsub("candidate_", "", temp_cand)
     temp_row <- which(results[, 1] == temp_cand_short)
@@ -61,25 +80,30 @@ conditional_table <- function(data, categories) {
 
   cand_names <- results[, 1]
   results[, 1] <- NULL
-  col_sums <- colSums(results)
+  total_row <- data.frame(t(colSums(unique_votes)))
+  total_row <- total_row[, -ncol(total_row)]
+  names(total_row) <- names(results)
+  results <- dplyr::bind_rows(results, total_row)
   results_percent <- results
   for (i in 1:ncol(results_percent)) {
     results_percent[, i] <- round(results_percent[, i] /
-                                    col_sums[i], 3) * 100
+                                    total_row[i], 3) * 100
   }
+  # Makes total row for percent to always be zero so its not highlighted
+  results_percent[nrow(results_percent),] <- 0
 
 
 
   results[, 1] <- gsub("_", " ", results[, 1])
   names(results) <- gsub("_", " ", names(results))
   cand_names <- gsub("_", " ", cand_names)
-  rownames(results) <- cand_names
+  rownames(results) <- c(cand_names, "Total")
 
 
   # prettifies results numbers - adds commas where appropriate
   results[] <- sapply(results,  prettyNum, big.mark = ",")
-  return(setNames(list(results, results_percent),
-                  c("results", "results_percent")))
+  return(setNames(list(results, results_percent, max_possible_votes),
+                  c("results", "results_percent", "max_possible_votes")))
 
 }
 
@@ -104,7 +128,8 @@ cont_to_categories <- function(.data) {
   return(.data)
 }
 
-kablize <- function(results, results_percent, categories) {
+kablize <- function(results, results_percent, categories, max_possible_votes) {
+
   for (i in 1:ncol(results)) {
     results[, i] <- kableExtra::cell_spec(results[, i],
                                           format = "html",
@@ -115,11 +140,15 @@ kablize <- function(results, results_percent, categories) {
 
   header <- c(1, ncol(results))
   names(header) <- c(" ", categories)
+  num_selections <- c(1, ncol(results))
+  names(num_selections) <- c(" ", paste0("Max number of selections: ",
+                                         max_possible_votes))
 
   knitr::kable(results, "html", escape = F) %>%
     kableExtra::kable_styling("striped", full_width = F) %>%
     kableExtra::kable_styling(bootstrap_options =
                                 c("striped", "hover")) %>%
+    kableExtra::add_header_above(num_selections) %>%
     kableExtra::add_header_above(header) %>%
     kableExtra::footnote(general =
                            paste0("Cells are color-coded by what proportion ",
@@ -169,3 +198,4 @@ grid.draw(legend)
 grid.arrange(legend,
              heights = c(1, 1),widths = c(3,4,-4))
 }
+

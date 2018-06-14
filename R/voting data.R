@@ -2,20 +2,21 @@ philly_votes <- function(file_location){
   ### Convert PDF to lines of text ###
   # suppressWarnings() simply hides and error that cannot be
   # addressed but doesn't impact the output
-  doc <- suppressMessages(pdftools::pdf_text(file_location))
-  txt <- unlist(strsplit(doc, split = "\n"))
+  txt <- suppressMessages(pdftools::pdf_text(file_location))
+  txt <- unlist(strsplit(txt, split = "\n"))
   txt <- trimws(txt)
 
-  # If PDF is not a "BALLOT IMAGE PROOF" file, skips it
-  if (!any(grepl("ballot image proof", txt[1:10], ignore.case = TRUE))) {
-    return(data.frame())
-  }
 
   ### Begin searches for searching for specific items ###
   # These use regexpr() to find the starting and stopping location of each
   # item followed by data cleaning to remove
   #   extra text that may be pulled in addition to the text we
   # actually want.
+
+  ### Voting Location ###
+  page <- txt
+  page[!grepl("Page.* [0-9]", txt, ignore.case = TRUE)] <- NA
+  page <- readr::parse_number(page)
 
   ### Ballot Position ###
   # * in middle ensures full code is pulled
@@ -52,12 +53,13 @@ philly_votes <- function(file_location){
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
-  name.loc <- regexpr("([A-Z]+ )*[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO NO|YES SI|No Vote", txt)
+  txt <- gsub("TH DISTRICT", "TH DISTRICT    ", txt)
+  name.loc <- regexpr("([A-Z]+ )*[A-Z]+, [A-Z]+(\\s+[[[:alpha:]])?|Write In|NO\\s+NO|YES\\s+SI|No Vote", txt)
   name.stop <- name.loc + attributes(name.loc)$match.length
   name <- substr(txt,
                  start = name.loc,
                  stop = name.stop)
-  name <- trimws(name)
+  name <- stringr::str_trim(name)
   name <- gsub("(.*), (.*)", "\\2 \\1", name)
 
   ### Votes ###
@@ -91,14 +93,17 @@ philly_votes <- function(file_location){
                          votes             = vote,
                          stringsAsFactors  = FALSE)
 
-  data <- data.frame(sapply(data, trimws), stringsAsFactors = FALSE)
+  data <- data.frame(sapply(data,  stringr::str_trim), stringsAsFactors = FALSE)
 
 
   # Makes category and candidate have proper capitalization
   # - original was all caps
   data$category <- sapply(data$category, simpleCap)
-  data$category <- gsub("-dem", " - Democrat", data$category)
-  data$category <- gsub("-rep", " - Republican", data$category)
+  data$category <- gsub("-dem| - dem|-D$", " - Democrat", data$category)
+  data$category <- gsub("-rep| - rep|-R$", " - Republican", data$category)
+  data$category <- gsub("-D-", " - Democrat - ", data$category)
+  data$category <- gsub("-R-", " - Republican - ", data$category)
+
   data$candidate <- sapply(data$candidate, simpleCap)
 
 
@@ -122,16 +127,27 @@ philly_votes <- function(file_location){
                                          na.rm = FALSE)
   data$voter_record <- zoo::na.locf(data$voter_record,
                                         na.rm = FALSE)
+  voter_record <- data$voter_record[!is.na(data$voter_record)]
+  data$voter_record[is.na(data$voter_record)] <- as.numeric(voter_record[1]) - 1
   data$uniqueID   <-  paste(data$serial_number,
                                 data$voter_record)
-  data$file <- gsub(".*/", "", file_location)
-
-  # Remove uncessary rows
-  data <- data[!is.na(data$votes), ]
+  data$file <- gsub(".*/|.pdf", "", file_location)
 
   # Fix Format
   data$voter_record <- as.numeric(as.character(data$voter_record))
+  data$pdf_page     <- page
+  data$pdf_page <- zoo::na.locf(data$pdf_page,
+                                     na.rm = FALSE,
+                                fromLast = TRUE)
   data$votes <- as.numeric(as.character(data$votes))
+
+
+  data$ward <- as.numeric(as.character(data$ward))
+  data$division <- as.numeric(as.character(data$division))
+
+  # Remove uncessary rows
+  data <- data[!is.na(data$serial_number), ]
+  data <- data[!is.na(data$candidate), ]
 
   return(data)
 
@@ -145,5 +161,11 @@ simpleCap <- function(words) {
         sep = "", collapse = " ")
   words <- gsub("Of", "of", words)
   words <- gsub("The", "the", words)
+  words <- gsub("And", "and", words)
+  words <- gsub(" Dist ", " District ", words)
+  words <- gsub(" Dist$", " District", words)
   return(words)
 }
+
+
+

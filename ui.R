@@ -7,12 +7,22 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                                       sidebarLayout(
                                         sidebarPanel(
-                                          selectInput("results_office", label = h3("Select a ballot position"),
+                                          selectizeInput("results_office",
+                                                         label = "Select a ballot position",
                                                       choices = sort(unique(all_votes$category))),
+                                          selectizeInput("ward_choice_elect_results",
+                                                         label = "Select a voting ward",
+                                                      choices = c("All", 1:66)),
                                           uiOutput("num_of_results"),
 
-                                          checkboxInput("percent", label = "Show Percent of Votes", value = FALSE)
+
+                                          checkboxInput("percent",
+                                                        label = "Show Percent of Votes",
+                                                        value = FALSE),
+                                          "Select a voting ward by clicking on the map",
+                                          leafletOutput("results_map")
                                         ),
+
 
                                         # Show a plot of the generated distribution
                                         mainPanel(
@@ -23,9 +33,14 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                                       sidebarLayout(
                                         sidebarPanel(
-                                          selectInput("num_office", label = h3("Select a ballot position"),
-                                                      choices = sort(unique(names(num_selected))))
-                                        ),
+                                          selectizeInput("num_office",
+                                                      label = "Select a ballot position",
+                                                      choices = sort(unique(names(num_selected)))),
+                                          selectizeInput("ward_choice_choices_per_office", label = h3("Select a ward"),
+                                                      choices = c("All", 1:66)),
+                                          "Select a voting ward by clicking on the map",
+                                          leafletOutput("choices_map")
+                                          ),
 
                                         # Show a plot of the generated distribution
                                         mainPanel(
@@ -38,8 +53,16 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
 
                                       sidebarLayout(
                                         sidebarPanel(
-                                          selectInput("cond_office", label = h3("Select a ballot position"),
+                                          selectizeInput("cond_office", label = "Select a ballot position",
                                                       choices = sort(unique(names(num_selected)))),
+
+                                          uiOutput("cond_table_num_selected"),
+                                          selectizeInput("ward_choice_cond_table",
+                                                         label = "Select a voting ward",
+                                                      choices = c("All", 1:66)),
+                                          "Select a voting ward by clicking on the map",
+                                          leafletOutput("cond_table_map"),
+
                                           h5("This table shows the number of people
                                     who voted for each candidate conditional
                                     on voting for another candidate."),

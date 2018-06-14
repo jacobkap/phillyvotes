@@ -1,24 +1,21 @@
 # This is the part where the "public" (i.e. not a programmer) uses
 # the function. It has an interactive part where it asks for them
-# to select the folder with the voting files.
+# # to select the folder with the voting files.
+# main_folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data/PDF_data"
+# folders <- list.files(main_folder, full.names = TRUE)
+# for (folder in folders[15:17]) {
+#   philadelphia_votes(folder)
+# }
+philadelphia_votes <- function(folder) {
+  setwd(folder)
+  folder_name <- gsub(".*/20", "20", folder)
+  message(folder_name)
+  folder_name <- gsub(" ", "_", folder_name)
+  folder_name <- paste0("election_", folder_name)
+  files <- list.files(full.names = TRUE)
 
-philadelphia_votes <- function(folder = NULL) {
-  if (is.null(folder)) {
-    cat(paste("Please navigate to the folder with the voting files and select",
-              "the files that you want. NOTE: selecting PDF files that are not voting",
-              "files may give wrong data!",
-              "\n\nA window should have opened where you can select the files from. If you",
-              "don't see it, try minimizing open windows on your screen (such as R).\n"))
-    files <- tcltk::tk_choose.files(default = "", caption = "Select files",
-                                    multi = TRUE, filters = NULL, index = 1)
-  } else {
-    files <- list.files(folder, full.names = TRUE)
-  }
   files <- files[grep("\\.PDF$", files, ignore.case = TRUE)]
-
-  message(paste0("\nCollecting and organizing data now.\n\n",
-                 "This process may take up to 20 minutes. ",
-                 "Please be patient. Thank you."))
+  files <- files[grep("BIR", files, ignore.case = TRUE)]
 
   # Sets up progress bar
   pb = txtProgressBar(min = 0, max = length(files), initial = 0)
@@ -29,19 +26,19 @@ philadelphia_votes <- function(folder = NULL) {
     setTxtProgressBar(pb, i)
   }
   results <- data.frame(results)
+
   rownames(results) <- 1:nrow(results)
-  return(results)
+
+  setwd("C:/Users/user/Dropbox/R_project/phillyvotes/data/clean_data/")
+  assign(folder_name, results) # Change name
+  save( list = folder_name,
+        file = paste0(folder_name, ".rda"))
 }
-# folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data"
-# all_votes <- philadelphia_votes(folder)
-# all_votes <- all_votes[!all_votes$category %in%
-#                          unique(grep("INSPECTOR|JUDGE OF ELECTION",
-#                                  unique(all_votes$category),
-#                                                      value = TRUE,
-#                                  ignore.case = TRUE)), ]
-#  all_votes <- all_votes[!is.na(all_votes$category), ]
-#  all_votes <- all_votes[, c("category", "candidate", "uniqueID")]
-#  setwd("C:/Users/user/Dropbox/R_project/phillyvotes/shiny_data")
-#  save(all_votes, file = "all_votes.rda")
 
 
+# # Check data
+# setwd("C:/Users/user/Dropbox/R_project/phillyvotes/data/clean_data")
+# files <- list.files()
+# load(files[1])
+# dim(election_2012_General)
+# summary(election_2012_General)

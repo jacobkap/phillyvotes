@@ -1,21 +1,20 @@
 context("location, wards, and divisions are correct")
 
-testing_file <- system.file("data",
-                            "2017 Primary - Black BIR 1.pdf",
-                            package = "phillyvotes")
-votes <- philly_votes(testing_file)
-testing_file2 <- system.file("data",
-                             "2017 Primary - YELLOW BIR.pdf",
-                             package = "phillyvotes")
-votes2 <- philly_votes(testing_file2)
-testing_file3 <- system.file("data",
+primary_2017_black1 <- system.file("data/PDF_data/2017 Primary", "2017 Primary - Black BIR 1.pdf",
+                                   package = "phillyvotes")
+votes <- philly_votes(primary_2017_black1)
+primary_2017_yellow <- system.file("data",
+                                   "2017 Primary - YELLOW BIR.pdf",
+                                   package = "phillyvotes")
+votes2 <- philly_votes(primary_2017_yellow)
+primary_2017_pink1 <- system.file("data",
                             "2017 Primary - PINK BIR 1.pdf",
                             package = "phillyvotes")
-votes3 <- philly_votes(testing_file3)
-testing_file4 <- system.file("data",
+votes3 <- philly_votes(primary_2017_pink1)
+primary_2017orange1 <- system.file("data",
                              "2017 Primary - ORANGE BIR 1.pdf",
                              package = "phillyvotes")
-votes4 <- philly_votes(testing_file4)
+votes4 <- philly_votes(primary_2017orange1)
 
 
 test_that("All rows have location values", {
