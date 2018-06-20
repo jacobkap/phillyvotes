@@ -6,21 +6,14 @@ cond_table_final <- function(data, categories, location = "All", num_choices = "
 }
 
 conditional_table <- function(data, categories, location = "All", num_choices = "All") {
-  if (location != "All") {
-    data <-
-      data %>%
-      filter(ward == location)
-  }
 
-  votes <- data %>% dplyr::filter(category %in% categories)
-    #,tolower(candidate) != "write in"
 
-  votes$candidate <- gsub(" ", "_", votes$candidate)
-  votes <- fastDummies::dummy_cols(votes, select_columns = "candidate")
+  data$candidate <- gsub(" ", "_", data$candidate)
+  data <- fastDummies::dummy_cols(data, select_columns = "candidate")
 
-  candidate_cols <- names(votes)[grepl("candidate_", names(votes))]
+  candidate_cols <- names(data)[grepl("candidate_", names(data))]
 
-  unique_votes <- votes %>%
+  unique_votes <- data %>%
     group_by(uniqueID) %>%
     summarise_at(candidate_cols,
                  .funs = "sum")
@@ -44,11 +37,11 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
                                ncol = length(candidate_cols) + 1 ))
   # Sort the candidates by voting counts (in decreasing order)
   # To be used as rownames for the table
-  results[,1] <- names(sort(table(votes$candidate), decreasing = TRUE))
+  results[,1] <- names(sort(table(data$candidate), decreasing = TRUE))
 
 
   # Puts the voting data set into the proper order - winner, 2nd place, etc.
-  col_names <- c(results[, 1], unique(votes$candidate[!votes$candidate %in% results[, 1]]))
+  col_names <- c(results[, 1], unique(data$candidate[!data$candidate %in% results[, 1]]))
   col_names <- paste0("candidate_", col_names)
   unique_votes <- unique_votes[, col_names]
   for (i in 1:nrow(results)) {
@@ -84,13 +77,6 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
   total_row <- total_row[, -ncol(total_row)]
   names(total_row) <- names(results)
   results <- dplyr::bind_rows(results, total_row)
-  results_percent <- results
-  for (i in 1:ncol(results_percent)) {
-    results_percent[, i] <- round(results_percent[, i] /
-                                    total_row[i], 3) * 100
-  }
-  # Makes total row for percent to always be zero so its not highlighted
-  results_percent[nrow(results_percent),] <- 0
 
 
 
@@ -99,11 +85,15 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
   cand_names <- gsub("_", " ", cand_names)
   rownames(results) <- c(cand_names, "Total")
 
+  results <-
+    results %>%
+    mutate_all(as.character)
 
   # prettifies results numbers - adds commas where appropriate
-  results[] <- sapply(results,  prettyNum, big.mark = ",")
-  return(setNames(list(results, results_percent, max_possible_votes),
-                  c("results", "results_percent", "max_possible_votes")))
+#  results[] <- sapply(results,  prettyNum, big.mark = ",")
+#  return(setNames(list(results, results_percent, max_possible_votes),
+#                  c("results", "results_percent", "max_possible_votes")))
+  return(results)
 
 }
 

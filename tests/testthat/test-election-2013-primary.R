@@ -2,25 +2,25 @@ context("election-2013-primary")
 
 file1 <- system.file("data/PDF_data/2013 Primary",
                      "2013 Primary RTC 1 BIR 1 of 2.pdf",
-                     package = "phillyfile")
+                     package = "phillyvotes")
 file2 <- system.file("data/PDF_data/2013 Primary",
                      "2013 Primary RTC 5 BIR.pdf",
-                     package = "phillyfile")
+                     package = "phillyvotes")
 file3 <- system.file("data/PDF_data/2013 Primary",
                      "2013 Primary RTC 6 BIR.pdf",
-                     package = "phillyfile")
+                     package = "phillyvotes")
 file4 <- system.file("data/PDF_data/2013 Primary",
                      "2013 Primary RTC BT BIR 1 of 3.pdf",
-                     package = "phillyfile")
+                     package = "phillyvotes")
 file5 <- system.file("data/PDF_data/2013 Primary",
                      "2013 Primary RTC BT BIR 2 of 3.pdf",
-                     package = "phillyfile")
+                     package = "phillyvotes")
 
-file1 <- philly_file(file1)
-file2 <- philly_file(file2)
-file3 <- philly_file(file3)
-file4 <- philly_file(file4)
-file5 <- philly_file(file5)
+file1 <- philly_votes(file1)
+file2 <- philly_votes(file2)
+file3 <- philly_votes(file3)
+file4 <- philly_votes(file4)
+file5 <- philly_votes(file5)
 
 test_that("right file name", {
   expect_equal(unique(file1$file), "2013 Primary RTC 1 BIR 1 of 2")
@@ -63,20 +63,20 @@ test_that("unique voters have correct number of files recorded", {
 
 })
 
-test_that("all votes are equal to 1", {
-  expect_equal(unique(file1$votes), c(1, NA))
-  expect_equal(unique(file2$votes), c(1, NA))
-  expect_equal(unique(file3$votes), c(1, NA))
-  expect_equal(unique(file4$votes), c(1, NA))
-  expect_equal(unique(file5$votes), c(1, NA))
-})
+# test_that("all votes are equal to 1", {
+#   expect_true(unique(file1$votes) %in% c(1, NA))
+#   expect_true(unique(file2$votes) %in% c(1, NA))
+#   expect_true(unique(file3$votes) %in% c(1, NA))
+#   expect_true(unique(file4$votes) %in% c(1, NA))
+#   expect_true(unique(file5$votes) %in% c(1, NA))
+# })
 
 
 test_that("ballot ballot_position values are correct", {
   # First 6 votes
   expect_equal(head(file1$ballot_position), c("3E", "7E", "14E", "20E", "22E", "26E"))
   # Last 6 votes
-  expect_equal(tail(file1$ballot_position), c("5F", "9F", "10F", "12G", "19H", "19H"))
+  expect_equal(tail(file1$ballot_position), c("5F", "9F", "10F", "12G", "19G", "19H"))
 
   # First 6 votes
   expect_equal(head(file2$ballot_position), c("3E", "10E", "13E", "14E", "22E", "24E"))
@@ -89,37 +89,74 @@ test_that("ballot ballot_position values are correct", {
   expect_equal(tail(file3$ballot_position), c("19H", "5E", "14E", "19E", "22E", "26E"))
 
   # First 6 votes
-  expect_equal(head(file4$ballot_position), c("3E", "5E", "6E", "8E", "24E", "27E"))
+  expect_equal(head(file4$ballot_position), c("3E", "5E", "6E", "8E", "22E", "24E"))
   # Last 6 votes
   expect_equal(tail(file4$ballot_position), c("12H", "17H", "3E", "5E", "9E", "17F"))
 
   # First 6 votes
-  expect_equal(head(file5$ballot_position), c("3E", "5E", "6E", "8E", "9E", "10"))
+  expect_equal(head(file5$ballot_position), c("3E", "5E", "6E", "8E", "9E", "10E"))
   # Last 6 votes
   expect_equal(tail(file5$ballot_position), c("13F", "20F", "6G", "9G", "12G", "3E"))
 
 })
 
+test_that("voter number in right order", {
+  expect_equal(head(file1$voter_record), c(1, 1, 1, 1, 1, 1))
+  expect_equal(tail(file1$voter_record), c(17, 17, 17, 17, 17, 17))
+
+  expect_equal(head(file2$voter_record), c(1, 1, 1, 1, 1, 1))
+  expect_equal(tail(file2$voter_record), c(23, 23, 23, 23, 23, 23))
+
+  expect_equal(head(file3$voter_record), c(1, 1, 1, 2, 2, 2))
+  expect_equal(tail(file3$voter_record), c(2, 3, 3, 3, 3, 3))
+
+  expect_equal(head(file4$voter_record), c(1, 1, 1, 1, 1, 1))
+  expect_equal(tail(file4$voter_record), c(23, 23, 24, 24, 24, 24))
+
+  expect_equal(head(file5$voter_record), c(25, 25, 25, 25, 25, 25))
+  expect_equal(tail(file5$voter_record), c(23, 23, 23, 23, 23, 24))
+})
+
 test_that("Ballots with No Vote all have position 43A", {
-  expect_equal(unique(file1$ballot_position[file1$candidate == "No Vote"]),
-               "43A")
-  expect_equal(unique(file2$ballot_position[file2$candidate == "No Vote"]),
-               "43A")
-  expect_equal(unique(file3$ballot_position[file3$candidate == "No Vote"]),
-               "43A")
-  expect_equal(unique(file4$ballot_position[file4$candidate == "No Vote"]),
-               "43A")
-  expect_equal(unique(file5$ballot_position[file5$candidate == "No Vote"]),
-               "43A")
+  if (length(unique(file1$ballot_position[file1$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file1$ballot_position[file1$candidate == "No Vote"]),
+                 "43A")
+  }
+  if (length(unique(file2$ballot_position[file2$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file2$ballot_position[file2$candidate == "No Vote"]),
+                 "43A")
+  }
+  if (length(unique(file3$ballot_position[file3$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file3$ballot_position[file3$candidate == "No Vote"]),
+                 "43A")
+  }
+  if (length(unique(file4$ballot_position[file4$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file4$ballot_position[file4$candidate == "No Vote"]),
+                 "43A")
+  }
+  if (length(unique(file5$ballot_position[file5$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file5$ballot_position[file5$candidate == "No Vote"]),
+                 "43A")
+  }
 })
 
 
 test_that("Ballots with No Vote all have category NA", {
-  expect_true(is.na(unique(file1$category[file1$candidate == "No Vote"])))
-  expect_true(is.na(unique(file2$category[file2$candidate == "No Vote"])))
-  expect_true(is.na(unique(file3$category[file3$candidate == "No Vote"])))
-  expect_true(is.na(unique(file4$category[file4$candidate == "No Vote"])))
-  expect_true(is.na(unique(file5$category[file5$candidate == "No Vote"])))
+  if (length(unique(file1$category[file1$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file1$category[file1$candidate == "No Vote"])))
+  }
+  if (length(unique(file2$category[file2$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file2$category[file2$candidate == "No Vote"])))
+  }
+  if (length(unique(file3$category[file3$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file3$category[file3$candidate == "No Vote"])))
+  }
+  if (length(unique(file4$category[file4$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file4$category[file4$candidate == "No Vote"])))
+  }
+  if (length(unique(file5$category[file5$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file5$category[file5$candidate == "No Vote"])))
+  }
 })
 
 
@@ -168,7 +205,7 @@ test_that("proper number of unique ID for a location and serial number match", {
   expect_equal(length(unique(file4$uniqueID[file4$serial_number == "020383"])), 80)
   expect_equal(length(unique(file4$uniqueID[file4$serial_number == "020492"])), 47)
 
-  expect_equal(length(unique(file5$uniqueID[file5$serial_number == "020727"])), 46)
+  expect_equal(length(unique(file5$uniqueID[file5$serial_number == "021763"])), 30)
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "020912"])), 28)
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "020954"])), 60)
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "021766"])), 38)
@@ -176,30 +213,30 @@ test_that("proper number of unique ID for a location and serial number match", {
 
 
 test_that("unique IDs in right order", {
-  expect_equal(unique(head(file1$uniqueID)), c("020001", "020001", "020001",
-                                               "020001", "020001", "020001"))
-  expect_equal(unique(tail(file1$uniqueID)), c("021840", "021840", "021840",
-                                               "021840", "021840", "021840"))
+  expect_equal(head(file1$uniqueID), c("020001 1", "020001 1", "020001 1",
+                                       "020001 1", "020001 1", "020001 1"))
+  expect_equal(tail(file1$uniqueID), c("021840 17", "021840 17", "021840 17",
+                                       "021840 17", "021840 17", "021840 17"))
 
-  expect_equal(unique(head(file2$uniqueID)), c("021009", "021009", "021009",
-                                               "021009", "021009", "021009"))
-  expect_equal(unique(tail(file2$uniqueID)), c("023236", "023236", "023236",
-                                               "023236", "023236", "023236"))
+  expect_equal(head(file2$uniqueID), c("021009 1", "021009 1", "021009 1",
+                                       "021009 1", "021009 1", "021009 1"))
+  expect_equal(tail(file2$uniqueID), c("023236 23", "023236 23", "023236 23",
+                                       "023236 23", "023236 23", "023236 23"))
 
-  expect_equal(unique(head(file3$uniqueID)), c("020277", "020277", "020277",
-                                               "020277", "020277", "020277"))
-  expect_equal(unique(tail(file3$uniqueID)), c("022236", "022236", "022236",
-                                               "022236", "022236", "022236"))
+  expect_equal(head(file3$uniqueID), c("020277 1", "020277 1", "020277 1",
+                                       "020277 2", "020277 2", "020277 2"))
+  expect_equal(tail(file3$uniqueID), c("022236 2", "022236 3", "022236 3",
+                                       "022236 3", "022236 3", "022236 3"))
 
-  expect_equal(unique(head(file4$uniqueID)), c("020383", "020383", "020383",
-                                               "020383", "020383", "020383"))
-  expect_equal(unique(tail(file4$uniqueID)), c("020727", "020727", "020727",
-                                               "020727", "020727", "020727"))
+  expect_equal(head(file4$uniqueID), c("020383 1", "020383 1", "020383 1",
+                                       "020383 1", "020383 1", "020383 1"))
+  expect_equal(tail(file4$uniqueID), c("020727 23", "020727 23", "020727 24",
+                                       "020727 24", "020727 24", "020727 24"))
 
-  expect_equal(unique(head(file5$uniqueID)), c("020727", "020727", "020727",
-                                               "020727", "020727", "020727"))
-  expect_equal(unique(tail(file5$uniqueID)), c("022400", "022400", "022400",
-                                               "022400", "022400", "022400"))
+  expect_equal(head(file5$uniqueID), c("020727 25", "020727 25", "020727 25",
+                                       "020727 25", "020727 25", "020727 25"))
+  expect_equal(tail(file5$uniqueID), c("022400 23", "022400 23", "022400 23",
+                                       "022400 23", "022400 23", "022400 24"))
 })
 
 
@@ -214,55 +251,76 @@ test_that("No commas in candidate names", {
 
 test_that("Candidate has right name", {
 
-  expect_equal(file1$candidate[file1$uniqueID == "020078 4", ],
-               c("Vince Giusini", "Marianne Squillaciotti",
+  expect_equal(file1$candidate[file1$uniqueID == "020078 4"],
+               c("Vince Giusini",
+                 "Marianne Squillaciotti",
                  "Josephine Baggio"))
-  expect_equal(file1$candidate[file1$uniqueID == "020078 6", ],
+  expect_equal(file1$candidate[file1$uniqueID == "020078 6"],
                c("Vince Giusini"))
-  expect_equal(file1$candidate[file1$uniqueID == "021840 14", ],
-               c("Henry Lewandoski", "Alan Butkovitz",
+  expect_equal(file1$candidate[file1$uniqueID == "021840 14"],
+               c("Henry Lewandowski",
+                 "Alan Butkovitz",
                  "James A Ward"))
-  expect_equal(file1$candidate[file1$uniqueID == "021840 9", ],
-               c("Joseph C Waters Jr", "Henry Lewandowski"))
-  expect_equal(file2$candidate[file2$uniqueID == "023236 19", ],
-               c("Terrence J Tracy Jr", "Elaine Delmont"))
-  expect_equal(file2$candidate[file2$uniqueID == "023236 10", ],
-               c("Vic Stabile", "Anne Marie Coyle", "Ella P Butcher",
-                 "Daniel A Alvarez"))
-  expect_equal(file2$candidate[file2$uniqueID == "023236 2", ],
-               c("Anne Marie Coyle", "Christopher M Vogler",
+  expect_equal(file1$candidate[file1$uniqueID == "021840 9"],
+               c("Joseph C Waters Jr",
+                 "Henry Lewandowski"))
+  expect_equal(file2$candidate[file2$uniqueID == "023236 19"],
+               c("Terrence J Tracy Jr",
                  "Elaine Delmont"))
-  expect_equal(file2$candidate[file2$uniqueID == "023235 36", ],
-               c("Henry Lewandowski", "Mark Zecca"))
-  expect_equal(file3$candidate[file3$uniqueID == "020277 1", ],
-               c("Aida Luisa Ribot", "Ernesto Rivera Jr",
-                 "Jose A Figueroa"))
-  expect_equal(file3$candidate[file3$uniqueID == "020277 3", ],
-               c("John J O Connor Jr"))
-  expect_equal(file3$candidate[file3$uniqueID == "020277 5", ],
-               c("Aida Luisa Ribor", "Ernesto Rivera Jr",
-                 "Rania Major"))
-  expect_equal(file3$candidate[file3$uniqueID == "022235 11", ],
-               c("Anne Marie Coyle", "Terrence J Tracy Jr"))
-  expect_equal(file4$candidate[file4$uniqueID == "020492 26", ],
-               c("Stephanie M Sawyer"))
-  expect_equal(file4$candidate[file4$uniqueID == "020492 20", ],
-               c("Vince Giusini", "Martin Coleman", "Suzanne Harmon Carn",
+  expect_equal(file2$candidate[file2$uniqueID == "023236 10"],
+               c("Vic Stabile",
+                 "Anne Marie Coyle",
+                 "Ella P Butcher",
+                 "Daniel A Alvarez"))
+  expect_equal(file2$candidate[file2$uniqueID == "023236 2"],
+               c("Anne Marie Coyle",
+                 "Christopher M Vogler",
+                 "Elaine Delmont"))
+  expect_equal(file2$candidate[file2$uniqueID == "023235 36"],
+               c("Henry Lewandowski",
                  "Mark Zecca"))
-  expect_equal(file4$candidate[file4$uniqueID == "020533 51", ],
-               c("Katherine Lindsay", "Margaret Hutchinson"))
-  expect_equal(file4$candidate[file4$uniqueID == "020533 4", ],
-               c("Joseph C Waters Jr", "R Seth Williams",
-                 "Katherine Lindsay", "Margaret Hutchinson"))
-  expect_equal(file5$candidate[file5$uniqueID == "021766 31", ],
-               c("Joseph C Waters Jr", "Write In"))
-  expect_equal(file5$candidate[file5$uniqueID == "022359 1", ],
-               c("R Seth Williams", "Alan Butkovitz",
-                 "Jose A Figueroa", "Keith Jackson"))
-  expect_equal(file5$candidate[file5$uniqueID == "020727 27", ],
+  expect_equal(file3$candidate[file3$uniqueID == "020277 1"],
+               c("Aida Luisa Ribot",
+                 "Ernesto Rivera Jr",
+                 "Jose A Figueroa"))
+  expect_equal(file3$candidate[file3$uniqueID == "020277 3"],
+               c("John J O Connor Jr"))
+  expect_equal(file3$candidate[file3$uniqueID == "020277 5"],
+               c("Aida Luisa Ribot",
+                 "Ernesto Rivera Jr",
+                 "Rania Major"))
+  expect_equal(file3$candidate[file3$uniqueID == "022235 11"],
+               c("Anne Marie Coyle",
+                 "Terrence J Tracy Jr"))
+  expect_equal(file4$candidate[file4$uniqueID == "020492 26"],
+               c("Stephanie M Sawyer"))
+  expect_equal(file4$candidate[file4$uniqueID == "020492 20"],
+               c("Vince Giusini",
+                 "Martin Coleman",
+                 "Suzanne Harmon Carn",
+                 "Mark Zecca"))
+  expect_equal(file4$candidate[file4$uniqueID == "020533 51"],
+               c("Katherine Lindsay",
+                 "Margaret Hutchinson"))
+  expect_equal(file4$candidate[file4$uniqueID == "020533 4"],
+               c("Joseph C Waters Jr",
+                 "R Seth Williams",
+                 "Katherine Lindsay",
+                 "Margaret Hutchinson"))
+  expect_equal(file5$candidate[file5$uniqueID == "021766 31"],
+               c("Joseph C Waters Jr",
+                 "Write In"))
+  expect_equal(file5$candidate[file5$uniqueID == "022359 1"],
+               c("R Seth Williams",
+                 "Alan Butkovitz",
+                 "Jose A Figueroa",
+                 "Keith Jackson"))
+  expect_equal(file5$candidate[file5$uniqueID == "020727 27"],
                c("R Seth Williams"))
-  expect_equal(file5$candidate[file5$uniqueID == "020727 37", ],
-               c("Timika Lane", "Martin Coleman", "Henry Lewandowski",
+  expect_equal(file5$candidate[file5$uniqueID == "020727 37"],
+               c("Timika Lane",
+                 "Martin Coleman",
+                 "Henry Lewandowski",
                  "R Seth Williams"))
 
 
@@ -272,74 +330,74 @@ test_that("Candidate has right name", {
 
 test_that("Categories are correct", {
 
-  expect_equal(file1$category[file1$uniqueID == "020078 4", ],
+  expect_equal(file1$category[file1$uniqueID == "020078 4"],
                c("Judge of the Court of Common Pleas - Democrat",
-                 "Judge of Election- Democrat - 02-18",
+                 "Judge of Election - Democrat - 02-18",
                  "Inspector of Election - Democrat - 02-18"))
-  expect_equal(file1$category[file1$uniqueID == "020078 6", ],
+  expect_equal(file1$category[file1$uniqueID == "020078 6"],
                c("Judge of the Court of Common Pleas - Democrat"))
-  expect_equal(file1$category[file1$uniqueID == "021840 14", ],
+  expect_equal(file1$category[file1$uniqueID == "021840 14"],
                c("Judge of the Municipal Court - Democrat",
                  "Controller - Democrat",
                  "Inspector of Election - Democrat - 39-19"))
-  expect_equal(file1$category[file1$uniqueID == "021840 9", ],
+  expect_equal(file1$category[file1$uniqueID == "021840 9"],
                c("Judge of the Superior Court - Democrat",
                  "Judge of the Municipal Court - Democrat"))
-  expect_equal(file2$category[file2$uniqueID == "023236 19", ],
+  expect_equal(file2$category[file2$uniqueID == "023236 19"],
                c("Controller - Republican",
                  "Inspector of Election - Republican - 64-18"))
-  expect_equal(file2$category[file2$uniqueID == "023236 10", ],
+  expect_equal(file2$category[file2$uniqueID == "023236 10"],
                c("Judge of the Superior Court - Republican",
                  "Judge of the Court of Common Pleas - Republican",
                  "Judge of the Traffic Court - Republican",
                  "District Attorney - Republican"))
-  expect_equal(file2$category[file2$uniqueID == "023236 2", ],
-               c("Judge of the Court of Common Pleas- Republican",
-                 "Jude of the Traffic Court - Republican",
+  expect_equal(file2$category[file2$uniqueID == "023236 2"],
+               c("Judge of the Court of Common Pleas - Republican",
+                 "Judge of the Traffic Court - Republican",
                  "Inspector of Election - Republican - 64-18"))
-  expect_equal(file2$category[file2$uniqueID == "023235 36", ],
+  expect_equal(file2$category[file2$uniqueID == "023235 36"],
                c("Judge of the Municipal Court - Democrat",
                  "Controller - Democrat"))
-  expect_equal(file3$category[file3$uniqueID == "020277 1", ],
+  expect_equal(file3$category[file3$uniqueID == "020277 1"],
                c("Judge of Election - Democrat - 07-01",
                  "Inspector of Election - Democrat - 07-01",
-                 "Judge of the Traffic Court - Democrat - Democrat"))
-  expect_equal(file3$category[file3$uniqueID == "020277 3", ],
+                 "Judge of the Traffic Court - Democrat"))
+  expect_equal(file3$category[file3$uniqueID == "020277 3"],
                c("Judge of the Court of Common Pleas - Democrat"))
-  expect_equal(file3$category[file3$uniqueID == "022235 11", ],
-               c("Judge of the Court of Common PLeas - Republican",
+  expect_equal(file3$category[file3$uniqueID == "022235 11"],
+               c("Judge of the Court of Common Pleas - Republican",
                  "Controller - Republican"))
-  expect_equal(file3$category[file3$uniqueID == "022235 3", ],
+  expect_equal(file3$category[file3$uniqueID == "022235 3"],
                c("Judge of the Court of Common Pleas - Democrat",
                  "Judge of the Court of Common Pleas - Democrat"))
-  expect_equal(file4$category[file4$uniqueID == "020492 26", ],
+  expect_equal(file4$category[file4$uniqueID == "020492 26"],
                c("Judge of the Court of Common Pleas - Democrat"))
-  expect_equal(file4$category[file4$uniqueID == "020492 20", ],
+  expect_equal(file4$category[file4$uniqueID == "020492 20"],
                c("Judge of the Court of Common Pleas - Democrat",
-                 "Judge of the Municiapl Court - Democrat",
+                 "Judge of the Municipal Court - Democrat",
                  "Judge of the Traffic Court - Democrat",
                  "Controller - Democrat"))
-  expect_equal(file4$category[file4$uniqueID == "020533 51", ],
+  expect_equal(file4$category[file4$uniqueID == "020533 51"],
                c("Judge of Election - Democrat - 12-10",
                  "Inspector of Election - Democrat - 12-10"))
-  expect_equal(file4$category[file4$uniqueID == "020533 4", ],
+  expect_equal(file4$category[file4$uniqueID == "020533 4"],
                c("Judge of the Superior Court - Democrat",
                  "District Attorney - Democrat",
                  "Judge of Election - Democrat - 12-10",
-                 "Inspector of Election - Democrat 12-10"))
-  expect_equal(file5$category[file5$uniqueID == "021766", ],
+                 "Inspector of Election - Democrat - 12-10"))
+  expect_equal(file5$category[file5$uniqueID == "021766 31"],
                c("Judge of the Superior Court - Democrat",
                  "Judge of Election - Democrat - 38-03"))
-  expect_equal(file5$category[file5$uniqueID == "022359 1", ],
+  expect_equal(file5$category[file5$uniqueID == "022359 1"],
                c("District Attorney - Democrat", "Controller - Democrat",
                  "Judge of the Traffic Court - Democrat",
                  "Judge of the Traffic Court - Democrat"))
-  expect_equal(file5$category[file5$uniqueID == "020727 27", ],
+  expect_equal(file5$category[file5$uniqueID == "020727 27"],
                c("District Attorney - Democrat"))
-  expect_equal(file5$category[file5$uniqueID == "020727 37", ],
+  expect_equal(file5$category[file5$uniqueID == "020727 37"],
                c("Judge of the Court of Common Pleas - Democrat",
                  "Judge of the Municipal Court - Democrat",
                  "Judge of the Municipal Court - Democrat",
-                 "District Attorney"))
+                 "District Attorney - Democrat"))
 
 })
