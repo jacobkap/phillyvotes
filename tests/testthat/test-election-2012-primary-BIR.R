@@ -166,6 +166,21 @@ test_that("Candidate has right name", {
                c("Eugene A Depasquale",
                  "Lawrence M Farnese Jr",
                  "William F Keller"))
+  expect_equal(file1$candidate[file1$uniqueID == "021330 70"],
+               c("Barack Obama",
+                 "Joseph John Vodvarka",
+                 "Kathleen G Kane",
+                 "Eugene A Depasquale",
+                 "Robert M Mccord",
+                 "Chaka Fattah",
+                 "Jordan A Harris",
+                 "Kenyatta J Johnson",
+                 "Cindy Bass",
+                 "Blondell Reynolds Brown",
+                 "Jacquelyn Manns Smalley",
+                 "Stephen A Cozen",
+                 "Andrew P Toy",
+                 "Heather Steinmiller"))
   expect_equal(file1$candidate[file1$uniqueID == "020001 2"],
                c("Patrick Murphy",
                  "William F Keller"))
@@ -294,6 +309,21 @@ test_that("Categories are correct", {
 
   expect_equal(file1$category[file1$uniqueID == "020001 7"],
                c("Attorney General - Democrat"))
+  expect_equal(file1$category[file1$uniqueID == "021330 70"],
+               c("President of the United States - Democrat",
+                 "United States Senator - Democrat",
+                 "Attorney General - Democrat",
+                 "Auditor General - Democrat",
+                 "State Treasurer - Democrat",
+                 "Representative in Congress - 2nd District - Democrat",
+                 "Representative in the General Assembly - 186th District - Democrat",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District",
+                 "Delegate to the Democratic National Convention 2nd District"))
   expect_equal(file1$category[file1$uniqueID == "020001 1"],
                c("Auditor General - Democrat",
                  "Senator in the General Assembly - 1st District - Democrat",

@@ -6,12 +6,91 @@ philly_votes <- function(file_location){
   txt <- unlist(strsplit(txt, split = "\n"))
   txt <- trimws(txt)
 
-  txt <- gsub("TH DISTRICT ", "TH DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("CO COOPERMAN ", "CO COOPERMAN ", txt, ignore.case = TRUE)
+  txt <- gsub("BUTC BUTCHART ", "BUTC BUTCHART ", txt, ignore.case = TRUE)
+  txt <- gsub("J C CUNNINGHAM", "J C CUNNINGHAM", txt, ignore.case = TRUE)
+  txt <- gsub("PALU PALUMBO", "PALU PALUMBO", txt, ignore.case = TRUE)
+  txt <- gsub("B BR BRONSON", "B BR BRONSON", txt, ignore.case = TRUE)
+  txt <- gsub("FOX FOX", "FOX FOX", txt, ignore.case = TRUE)
+  txt <- gsub("JOHN MILTO YOUNGE", "JOHN MILTO YOUNGE", txt, ignore.case = TRUE)
+  txt <- gsub("GWENDOLY BRIGHT", "GWENDOLY BRIGHT", txt, ignore.case = TRUE)
+  txt <- gsub("W TUC TUCKER", "W TUC TUCKER", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("", "", txt, ignore.case = TRUE)
 
+  txt <- gsub("CONVENTION (.*) DIST ", "CONVENTION \\1 DISTRICT    ",
+              txt, ignore.case = TRUE)
+  txt <- gsub("DISTRI |DISTR ", "DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("CONGRESSIONAL D ", "CONGRESSIONAL DISTRICT     ", txt, ignore.case = TRUE)
+  txt <- gsub("SENATORIAL DISTRICT ", "SENATORIAL DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("SENATORIAL DIST ", "SENATORIAL DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("TH DISTRICT ", "TH DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("ST DISTRICT ", "ST DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("RD DISTRICT ", "RD DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("ND DISTRICT ", "ND DISTRICT    ", txt, ignore.case = TRUE)
+  txt <- gsub("CONGRESSION ", "CONGRESSION       ", txt, ignore.case = TRUE)
+  txt <- gsub(" DISTRICT-REP ", " DISTRICT-REP          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DISTRICT-DEM ", " DISTRICT-DEM          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DISTRICT-R ", " DISTRICT-R          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DISTRICT-D ", " DISTRICT-D          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DIST-REP ", " DIST-REP          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DIST-DEM ", " DIST-DEM          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DIST - REP ", " DIST-REP          ", txt, ignore.case = TRUE)
+  txt <- gsub(" DIST - DEM ", " DIST-DEM          ", txt, ignore.case = TRUE)
+  txt <- gsub("ASSEMBLY - 1ST DIST ",
+              "ASSEMBLY -  1ST DIST           ", txt, ignore.case = TRUE)
+  txt <- gsub("ASSEMBLY - 13TH DIST ",
+              "ASSEMBLY -  13TH DIST           ", txt, ignore.case = TRUE)
+  txt <- gsub("ASSEMBLY - 2ND DIST ",
+              "ASSEMBLY -  2ND DIST           ", txt, ignore.case = TRUE)
+  txt <- gsub("5TH DISTR ", "5TH DISTR           ", txt, ignore.case = TRUE)
+  txt <- gsub("2ND DIST ", "2ND DIST           ", txt, ignore.case = TRUE)
+  txt <- gsub(" Assembly - 1 ", " Assembly - 1         ", txt, ignore.case = TRUE)
   txt <- gsub("A PE PECHKUROW ", "A PE    PECHKUROW ", txt, ignore.case = TRUE)
   txt <- gsub("DUMA DUMAS ", "DUMA      DUMAS ", txt, ignore.case = TRUE)
+  txt <- gsub("CONVENTION-", "CONVENTION - ", txt, ignore.case = TRUE)
   txt <- gsub("CONVENTION ([0-9]) ", "CONVENTION \\1    ", txt, ignore.case = TRUE)
+
   txt <- gsub("DISTRICT ", "DISTRICT       ", txt, ignore.case = TRUE)
+  txt <- gsub("DISTRICT\\s+ATTORNEY", "DISTRICT ATTORNEY", txt, ignore.case = TRUE)
+  txt <- gsub("DISTRICT\\s+COUNCIL", "DISTRICT COUNCIL", txt, ignore.case = TRUE)
   txt <- gsub("-D      ", "-DEM        ", txt, ignore.case = TRUE)
   txt <- gsub("-D      ", "-DEM        ", txt, ignore.case = TRUE)
   txt <- gsub("-DEM ", "-DEM     ", txt, ignore.case = TRUE)
@@ -19,6 +98,7 @@ philly_votes <- function(file_location){
   txt <- gsub("-REP-", " - REPUBLICAN - ", txt, ignore.case = TRUE)
   txt <- gsub("SENATORIAL D ", "SENATORIAL D    ", txt, ignore.case = TRUE)
   txt <- gsub("FRAZIER FRAZIER", "FRAZIER      FRAZIER", txt, ignore.case = TRUE)
+  txt <- gsub("SAYLOR SAYLOR", "SAYLOR      SAYLOR", txt, ignore.case = TRUE)
   txt <- gsub("Castille Castille", "Castille        Castille", txt, ignore.case = TRUE)
   txt <- gsub("Panella Panella", "Panella           Panella", txt, ignore.case = TRUE)
   txt <- gsub("Baer Baer", "Baer            Baer", txt, ignore.case = TRUE)
@@ -37,6 +117,9 @@ philly_votes <- function(file_location){
   txt <- gsub("FREDERICA A MASSIAH", "FREDERICA A         MASSIAH", txt, ignore.case = TRUE)
   txt <- gsub("YES\\s{1,}SI", "YES SI", txt, ignore.case = TRUE)
   txt <- gsub("NO\\s{1,}NO", "NO NO", txt, ignore.case = TRUE)
+  txt <- gsub("CONGRESSIONA ", "CONGRESSIONAl DISTRICT     ", txt, ignore.case = TRUE)
+
+  txt <- gsub("CONGRESSION ", "CONGRESSIONAl DISTRICT     ", txt, ignore.case = TRUE)
   txt <- gsub("ASSEMBLY - 1 JAMES", "ASSEMBLY - 1      JAMES", txt, ignore.case = TRUE)
 
   # Adds blank space at the end - for files without vote data
@@ -99,13 +182,13 @@ philly_votes <- function(file_location){
                      stop = location.stop)
 
   ### Voter Record ###
-  record.loc <- regexpr("[0-9]+ OF +[0-9]+", txt)
+  record.loc <- regexpr("[0-9]+\\s+OF +[0-9]+", txt)
   record.stop <- record.loc + attributes(record.loc)$match.length
   record <- substr(txt,
                    start = record.loc,
                    stop = record.stop)
   # Method pulls phrase preceeding voter record and extra space
-  record <- gsub(" OF.*", "", record)
+  record <- gsub("OF.*", "", record)
 
   ### Candidate Name ###
   # Need first A-Z for middle initial
@@ -161,13 +244,13 @@ philly_votes <- function(file_location){
   # Makes category and candidate have proper capitalization
   # - original was all caps
   data$category <- sapply(data$category, simpleCap)
-  data$category <- gsub("-dem| - dem|-D$", " - Democrat",
+  data$category <- gsub("-dem$| - dem$|-D$", " - Democrat",
                         data$category)
   data$category <- gsub("-d-", " - Democrat - ",
                         data$category, ignore.case = TRUE)
   data$category <- gsub("-r-", " - Republican - ",
                         data$category, ignore.case = TRUE)
-  data$category <- gsub("-rep| - rep|-R$", " - Republican",
+  data$category <- gsub("-rep$| - rep$|-R$", " - Republican",
                         data$category)
   data$category <- gsub("Congress-", "Congress - ",
                         data$category)
@@ -194,6 +277,9 @@ philly_votes <- function(file_location){
                         data$category, ignore.case = TRUE)
   data$category <- gsub("TEMPORARY", "Democratic",
                         data$category)
+  data$category <- gsub("Senatorial D$", "Senatorial District", data$category)
+  data$category <- gsub(" Dist ", " District ", data$category)
+  data$category <- gsub(" Distr | Distr$", " District ", data$category)
   data$category <- stringr::str_trim(data$category)
 
   data$candidate <- sapply(data$candidate, simpleCap)
@@ -231,15 +317,16 @@ philly_votes <- function(file_location){
   data$pdf_page <- zoo::na.locf(data$pdf_page,
                                 na.rm = FALSE,
                                 fromLast = TRUE)
+  data$uniqueID_with_pdf <- paste(data$uniqueID, data$file)
+
   data$votes <- as.numeric(as.character(data$votes))
-
-
   data$ward <- as.numeric(as.character(data$ward))
   data$division <- as.numeric(as.character(data$division))
 
   # Remove uncessary rows
   data <- data[!is.na(data$serial_number), ]
   data <- data[!is.na(data$candidate), ]
+
 
   return(data)
 
@@ -260,6 +347,7 @@ simpleCap <- function(words) {
   words <- gsub(" The ", " the ", words)
   words <- gsub(" And ", " and ", words)
   words <- gsub(" Dist ", " District ", words)
+  words <- gsub(" Distr ", " District ", words)
   words <- gsub(" Dist$", " District", words)
   return(words)
 }
@@ -274,7 +362,5 @@ get_split_pieces <- function(data, list_element) {
   })
   return(results)
 }
-
-
 
 

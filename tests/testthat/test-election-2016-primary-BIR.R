@@ -15,12 +15,16 @@ file4 <- system.file("data/PDF_data/2016 Primary",
 file5 <- system.file("data/PDF_data/2016 Primary",
                      "2016 PRIMARY - BROWN BIR 6.pdf",
                      package = "phillyvotes")
+file6 <- system.file("data/PDF_data/2016 Primary",
+                     "2016 PRIMARY - BLUE BIR.pdf",
+                     package = "phillyvotes")
 
 file1 <- philly_votes(file1)
 file2 <- philly_votes(file2)
 file3 <- philly_votes(file3)
 file4 <- philly_votes(file4)
 file5 <- philly_votes(file5)
+file6 <- philly_votes(file6)
 
 test_that("right file name", {
   expect_equal(unique(file1$file), "2016 PRIMARY - YELLOW BIR 1")
@@ -28,6 +32,7 @@ test_that("right file name", {
   expect_equal(unique(file3$file), "2016 PRIMARY - PINK BIR 4")
   expect_equal(unique(file4$file), "2016 PRIMARY - GREEN BIR 3")
   expect_equal(unique(file5$file), "2016 PRIMARY - BROWN BIR 6")
+  expect_equal(unique(file6$file), "2016 PRIMARY - BLUE BIR")
 })
 
 
@@ -37,6 +42,7 @@ test_that("right number of pages", {
   expect_equal(max(file3$pdf_page), 13099)
   expect_equal(max(file4$pdf_page), 9000)
   expect_equal(max(file5$pdf_page), 18000)
+  expect_equal(max(file6$pdf_page), 26114)
 })
 
 
@@ -68,6 +74,11 @@ test_that("ballot ballot_position values are correct", {
   # Last 6 votes
   expect_equal(tail(file5$ballot_position), c("28C", "29C", "31C", "7D", "17D", "25D"))
 
+  # First 6 votes
+  expect_equal(head(file6$ballot_position), c("12C", "25F", "4C", "27C", "19C", "25C"))
+  # Last 6 votes
+  expect_equal(tail(file6$ballot_position), c("26E", "4C", "12C", "29E", "27F", "29F"))
+
 })
 
 test_that("unique IDs in right order", {
@@ -95,6 +106,11 @@ test_that("unique IDs in right order", {
                                        "022162 29", "022162 29", "022162 29"))
   expect_equal(tail(file5$uniqueID), c("022267 8", "022267 8", "022267 8",
                                        "022267 8", "022267 8", "022267 8"))
+
+  expect_equal(head(file6$uniqueID), c("020001 1", "020001 1", "020001 1",
+                                       "020001 1", "020001 1", "020001 1"))
+  expect_equal(tail(file6$uniqueID), c("022516 146", "022516 146", "022516 146",
+                                       "022516 146", "022516 146", "022516 146"))
 })
 
 
@@ -113,6 +129,9 @@ test_that("voter number in right order", {
 
   expect_equal(head(file5$voter_record), c(29, 29, 29, 29, 29, 29))
   expect_equal(tail(file5$voter_record), c(8, 8, 8, 8, 8, 8))
+
+  expect_equal(head(file6$voter_record), c(1, 1, 1, 1, 1, 1))
+  expect_equal(tail(file6$voter_record), c(146, 146, 146, 146, 146, 146))
 })
 
 
@@ -144,6 +163,11 @@ test_that("proper number of unique ID for a location and serial number match", {
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "022255"])), 131)
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "022243"])), 139)
   expect_equal(length(unique(file5$uniqueID[file5$serial_number == "022238"])), 208)
+
+  expect_equal(length(unique(file6$uniqueID[file6$serial_number == "022516"])), 146)
+  expect_equal(length(unique(file6$uniqueID[file6$serial_number == "021917"])), 113)
+  expect_equal(length(unique(file6$uniqueID[file6$serial_number == "021647"])), 152)
+  expect_equal(length(unique(file6$uniqueID[file6$serial_number == "021321"])), 183)
 })
 
 test_that("unique voters have correct number of files recorded", {
@@ -171,6 +195,11 @@ test_that("unique voters have correct number of files recorded", {
   expect_equal(nrow(file5[file5$uniqueID == "022243 69",]), 1)
   expect_equal(nrow(file5[file5$uniqueID == "022243 70",]), 3)
   expect_equal(nrow(file5[file5$uniqueID == "022238 81",]), 3)
+
+  expect_equal(nrow(file6[file6$uniqueID == "021917 8",]), 1)
+  expect_equal(nrow(file6[file6$uniqueID == "021917 10",]), 1)
+  expect_equal(nrow(file6[file6$uniqueID == "021647 128",]), 9)
+  expect_equal(nrow(file6[file6$uniqueID == "021321 18",]), 3)
 
 })
 
@@ -234,6 +263,20 @@ test_that("Candidate has right name", {
                c("No No",
                  "No No",
                  "Yes Si"))
+
+  expect_equal(file6$candidate[file6$uniqueID == "021917 8"],
+               c("Bernie Sanders"))
+  expect_equal(file6$candidate[file6$uniqueID == "021917 10"],
+               c("Hillary Clinton"))
+  expect_equal(file6$candidate[file6$uniqueID == "021647 120"],
+               c("Chaka Fattah",
+                 "Malcolm Kenyatta",
+                 "Bernie Sanders",
+                 "Stephen A Zappala Jr"))
+  expect_equal(file6$candidate[file6$uniqueID == "021321 18"],
+               c("John R Kasich",
+                 "Yes Si",
+                 "Yes Si"))
 })
 
 
@@ -296,6 +339,20 @@ test_that("Categories are correct", {
                  "Proposed Constitutional Amendment #2",
                  "Proposed Charter Change Question #3"))
 
+  expect_equal(file6$category[file6$uniqueID == "021917 8"],
+               c("President of the United States - Democrat"))
+  expect_equal(file6$category[file6$uniqueID == "021917 10"],
+               c("President of the United States - Democrat"))
+  expect_equal(file6$category[file6$uniqueID == "021647 120"],
+               c("Representative in Congress - 2nd District - Democrat",
+                 "Delegate to the Democratic National Convention - 2nd District",
+                 "President of the United States - Democrat",
+                 "Attorney General - Democrat"))
+  expect_equal(file6$category[file6$uniqueID == "021321 18"],
+               c("President of the United States - Republican",
+                 "Proposed Constitutional Amendment #2",
+                 "Proposed Charter Change Question #3"))
+
 })
 
 
@@ -307,6 +364,7 @@ test_that("No commas in candidate names", {
   expect_false(all(grepl(",", file3$candidate)))
   expect_false(all(grepl(",", file4$candidate)))
   expect_false(all(grepl(",", file5$candidate)))
+  expect_false(all(grepl(",", file6$candidate)))
 })
 
 
@@ -340,6 +398,10 @@ test_that("Ballots with No Vote all have position 43A", {
     expect_equal(unique(file5$ballot_position[file5$candidate == "No Vote"]),
                  "43A")
   }
+  if (length(unique(file6$ballot_position[file6$candidate == "No Vote"])) > 0) {
+    expect_equal(unique(file6$ballot_position[file6$candidate == "No Vote"]),
+                 "43A")
+  }
 })
 
 test_that("Ballots with No Vote all have category NA", {
@@ -357,6 +419,9 @@ test_that("Ballots with No Vote all have category NA", {
   }
   if (length(unique(file5$category[file5$candidate == "No Vote"])) > 0) {
     expect_true(is.na(unique(file5$category[file5$candidate == "No Vote"])))
+  }
+  if (length(unique(file6$category[file6$candidate == "No Vote"])) > 0) {
+    expect_true(is.na(unique(file6$category[file6$candidate == "No Vote"])))
   }
 })
 
@@ -381,4 +446,8 @@ test_that("All rows have location values", {
   expect_false(any(is.na(file5$location)))
   expect_false(any(is.na(file5$ward)))
   expect_false(any(is.na(file5$division)))
+
+  expect_false(any(is.na(file6$location)))
+  expect_false(any(is.na(file6$ward)))
+  expect_false(any(is.na(file6$division)))
 })

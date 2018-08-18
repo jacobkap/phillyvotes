@@ -21,9 +21,9 @@ test_that("right file name", {
 })
 
 test_that("year values are right", {
-  expect_equal(max(file1$page), 642)
-  expect_equal(max(file2$page), 897)
-  expect_equal(max(file3$page), 1089)
+  expect_equal(max(file1$pdf_page), 642)
+  expect_equal(max(file2$pdf_page), 897)
+  expect_equal(max(file3$pdf_page), 1088)
 })
 
 test_that("precinct values are right", {
@@ -109,7 +109,6 @@ test_that("hour values are right", {
   expect_equal(head(file3$hour), c(14, 14, 15, 16, 17, 18))
   expect_equal(tail(file3$hour), c(19, 19, 19, 19, 19, 20))
 
-
 })
 
 # test_that("year values are right", {
@@ -119,21 +118,22 @@ test_that("hour values are right", {
 # })
 
 
-
-
-
-
-
-test_that("all actions are voter cast ballot", {
-  expect_equal(unique(file1$action), "voter cast ballot")
-  expect_equal(unique(file2$action), "voter cast ballot")
-  expect_equal(unique(file3$action), "voter cast ballot")
+test_that("all submit actions are voter cast ballot", {
+  expect_equal(unique(file1$submit_action), "voter cast ballot")
+  expect_equal(unique(file2$submit_action), "voter cast ballot")
+  expect_equal(unique(file3$submit_action), "voter cast ballot")
 })
 
-test_that("all actions are voter cast ballot", {
-  expect_equal(sum(is.na((file1$precinct))), 0)
-  expect_equal(sum(is.na((file2$precinct))), 0)
-  expect_equal(sum(is.na((file3$precinct))), 0)
+test_that("all start actions are voter enabled", {
+  expect_equal(unique(file1$start_action), "voter enabled")
+  expect_equal(unique(file2$start_action), "voter enabled")
+  expect_equal(unique(file3$start_action), "voter enabled")
+})
+
+test_that("no NA", {
+  expect_equal(sum(is.na((file1$division))), 0)
+  expect_equal(sum(is.na((file2$division))), 0)
+  expect_equal(sum(is.na((file3$division))), 0)
 
   # expect_equal(sum(is.na((file1$time))), 0)
   # expect_equal(sum(is.na((file2$time))), 0)
@@ -143,13 +143,17 @@ test_that("all actions are voter cast ballot", {
   expect_equal(sum(is.na((file2$serial))), 0)
   expect_equal(sum(is.na((file3$serial))), 0)
 
-  expect_equal(sum(is.na((file1$page))), 0)
-  expect_equal(sum(is.na((file2$page))), 0)
-  expect_equal(sum(is.na((file3$page))), 0)
+  expect_equal(sum(is.na((file1$pdf_page))), 0)
+  expect_equal(sum(is.na((file2$pdf_page))), 0)
+  expect_equal(sum(is.na((file3$pdf_page))), 0)
 
-  expect_equal(sum(is.na((file1$action))), 0)
-  expect_equal(sum(is.na((file2$action))), 0)
-  expect_equal(sum(is.na((file3$action))), 0)
+  expect_equal(sum(is.na((file1$start_action))), 0)
+  expect_equal(sum(is.na((file2$start_action))), 0)
+  expect_equal(sum(is.na((file3$start_action))), 0)
+
+  expect_equal(sum(is.na((file1$submit_action))), 0)
+  expect_equal(sum(is.na((file2$submit_action))), 0)
+  expect_equal(sum(is.na((file3$submit_action))), 0)
 
   expect_equal(sum(is.na((file1$ward))), 0)
   expect_equal(sum(is.na((file2$ward))), 0)

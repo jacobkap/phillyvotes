@@ -1,17 +1,34 @@
-# cond_table_final(all_votes, "Judge of the Commonwealth Court - Democrat")
-library(dplyr)
-cond_table_final <- function(data, categories, location = "All", num_choices = "All") {
-  cond_table <- conditional_table(data, categories, location = location, num_choices = num_choices)
-  kablize(cond_table$results, cond_table$results_percent, categories, cond_table$max_possible_votes)
-}
 
-conditional_table <- function(data, categories, location = "All", num_choices = "All") {
+conditional_table <- function(all_data, data) {
+
+  fix_cap <- function(words) {
+    words <- tolower(words)
+    words <- strsplit(words, " ")[[1]]
+    words <- paste(toupper(substring(words, 1,1)),
+                   substring(words, 2),
+                   sep = "", collapse = " ")
+    return(words)
+  }
+
+  # Makes sure all candidates are an option even if they received no votes
+  all_data <- all_data[!duplicated(paste(all_data$category, all_data$candidate)),]
+  all_data$uniqueID <- paste("to_remove", 1:nrow(all_data))
+  data <- bind_rows(all_data, data)
+
+  data <- data[data$candidate != "Write In", ]
 
 
   data$candidate <- gsub(" ", "_", data$candidate)
+  data$candidate <- paste(data$candidate, data$category)
+  data$candidate <- gsub("\\s", "_", data$candidate)
   data <- fastDummies::dummy_cols(data, select_columns = "candidate")
 
   candidate_cols <- names(data)[grepl("candidate_", names(data))]
+
+  # Subtracts 1 to control for the added vote from up top
+  for (col in candidate_cols) {
+    data[grep("to_remove", data$uniqueID), col] <- 0
+  }
 
   unique_votes <- data %>%
     group_by(uniqueID) %>%
@@ -23,11 +40,11 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
   unique_votes$total_votes <-  rowSums(unique_votes)
   max_possible_votes <- max(unique_votes$total_votes)
 
-  if (any(num_choices != "All")) {
-    unique_votes <-
-      unique_votes %>%
-      filter(total_votes <= max(num_choices))
-  }
+  # if (any(num_choices != "All")) {
+  #   unique_votes <-
+  #     unique_votes %>%
+  #     filter(total_votes <= max(num_choices))
+  # }
 
   names(unique_votes) <- gsub("\\s", "_", names(unique_votes))
 
@@ -37,7 +54,19 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
                                ncol = length(candidate_cols) + 1 ))
   # Sort the candidates by voting counts (in decreasing order)
   # To be used as rownames for the table
-  results[,1] <- names(sort(table(data$candidate), decreasing = TRUE))
+  name_col_order <- names(sort(table(data$candidate), decreasing = TRUE))
+
+  # Puts the candidates in order by most common office then within each office
+  # by most common candidate. Most common office is based on which office
+  # has the most common candidate
+  most_common_office <- unique(data$category[data$candidate == name_col_order[1]])
+  other_office <- unique(data$category[data$category != most_common_office])
+  name_col_order <- names(sort(table(data$candidate[data$category == most_common_office]),
+                               decreasing = TRUE))
+  name_col_order <- c(name_col_order,
+                      names(sort(table(data$candidate[data$category != most_common_office]),
+                                 decreasing = TRUE)))
+  results[,1] <- name_col_order
 
 
   # Puts the voting data set into the proper order - winner, 2nd place, etc.
@@ -50,10 +79,10 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
       filter(get(names(unique_votes)[i]) == 1)  %>%
       summarise_all(.funs = sum)
   }
+
+
   names(results) <- c("", trimws(gsub("candidate_", " ",
                                       names(unique_votes))))
-
-
 
   candidates <- names(unique_votes)
 
@@ -65,10 +94,17 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
     temp_cand_short <- gsub("candidate_", "", temp_cand)
     temp_row <- which(results[, 1] == temp_cand_short)
     temp_col <- which(names(results) == temp_cand_short)
-    results[temp_row, temp_col] <- unique_votes %>%
+
+    temp <-
+      unique_votes %>%
       filter(total_votes == 1) %>%
-      select(temp_cand) %>%
-      sum()
+      select(temp_cand)
+    if (nrow(temp) > 0) {
+      temp <-
+        temp %>%
+        sum()
+    } else { temp <- 0 }
+    results[temp_row, temp_col] <- temp
   }
 
   cand_names <- results[, 1]
@@ -76,7 +112,11 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
   total_row <- data.frame(t(colSums(unique_votes)))
   total_row <- total_row[, -ncol(total_row)]
   names(total_row) <- names(results)
-  results <- dplyr::bind_rows(results, total_row)
+
+
+  # Blanks out the bottom triangle of the table
+  results[lower.tri(results)] <- ""
+  results <- rbind(results, total_row)
 
 
 
@@ -89,103 +129,55 @@ conditional_table <- function(data, categories, location = "All", num_choices = 
     results %>%
     mutate_all(as.character)
 
-  # prettifies results numbers - adds commas where appropriate
-#  results[] <- sapply(results,  prettyNum, big.mark = ",")
-#  return(setNames(list(results, results_percent, max_possible_votes),
-#                  c("results", "results_percent", "max_possible_votes")))
+  #  prettifies results numbers - adds commas where appropriate
+  results[] <- sapply(results,  prettyNum, big.mark = ",")
+  results[] <- sapply(results,  trimws)
+  results[] <- sapply(results,  function(x) ifelse(x == "NA", "", x))
+
+  # Adds the candidate names as the first column
+  names_col <- data.frame(c(names(results), "Total"),
+                          stringsAsFactors = FALSE)
+  names(names_col) <- ""
+  results <- bind_cols(names_col, results)
+
+
+    office_row <- vector(mode = "character", length = ncol(results))
+    office_row[2] <- most_common_office
+    office_row[office_row == ""] <- "to_remove"
+
+
+    if (length(other_office) > 0) {
+    office_row[length(unique(data$candidate[data$category ==
+                                              most_common_office])) + 2] <- other_office
+    }
+
+    temp <- data.frame(t(names(results)), stringsAsFactors = FALSE)
+    names(temp) <- names(results)
+    results <- bind_rows(temp, results)
+    names(results) <- office_row
+
+  offices_to_remove <- paste0(" ", unique(data$category), collapse = "|")
+  if (length(unique(data$category)) == 1) {
+  names(results) <- gsub(offices_to_remove, "", names(results))
+  }
+  results[1, ] <- gsub(offices_to_remove, "", results[1, ])
+  results[, 1] <- gsub(offices_to_remove, "", results[, 1])
+  # results[1, 1] <- ""
+  results <- janitor::clean_names(results)
+  names(results) <- gsub("_", " ", names(results))
+
+  names(results) <- gsub(" democrat", " - democrat", names(results))
+  names(results) <- gsub(" republican", " - republican", names(results))
+  names(results) <- gsub("the - ", "the ", names(results))
+  results[1, ] <- gsub(" democrat", " - democrat", results[1, ])
+  results[1, ] <- gsub(" republican", " - republican", results[1, ])
+
+  names(results) <- sapply(names(results), fix_cap)
+
+ # if (length(unique(data$category)) == 1) {
+  #  results <- rbind(names(results), results)
+#  }
+
   return(results)
 
 }
-
-cont_to_categories <- function(.data) {
-  temp <- .data
-  temp[.data <= 20] <- "0-20"
-  temp[.data > 20 & .data <= 40] <- "21-40"
-  temp[.data > 40 & .data <= 60] <- "41-60"
-  temp[.data > 60 & .data <= 80] <- "61-80"
-  temp[.data > 80 & .data <= 100] <- "81-100"
-  .data <- temp
-  .data <- factor(.data, levels = c("0-20",
-                                    "21-40",
-                                    "41-60",
-                                    "61-80",
-                                    "81-100"),
-                  labels = c("#ffffff",
-                             "#bae4b3",
-                             "#74c476",
-                             "#31a354",
-                             "#006d2c"))
-  return(.data)
-}
-
-kablize <- function(results, results_percent, categories, max_possible_votes) {
-
-  for (i in 1:ncol(results)) {
-    results[, i] <- kableExtra::cell_spec(results[, i],
-                                          format = "html",
-                                          background = cont_to_categories(results_percent[, i]),
-                                          color = ifelse(results_percent[, i] > 60, "white", "black"),
-                                          font_size = 20)
-  }
-
-  header <- c(1, ncol(results))
-  names(header) <- c(" ", categories)
-  num_selections <- c(1, ncol(results))
-  names(num_selections) <- c(" ", paste0("Max number of selections: ",
-                                         max_possible_votes))
-
-  knitr::kable(results, "html", escape = F) %>%
-    kableExtra::kable_styling("striped", full_width = F) %>%
-    kableExtra::kable_styling(bootstrap_options =
-                                c("striped", "hover")) %>%
-    kableExtra::add_header_above(num_selections) %>%
-    kableExtra::add_header_above(header) %>%
-    kableExtra::footnote(general =
-                           paste0("Cells are color-coded by what proportion ",
-                                          "of voters in that column voted for the ",
-                                          "row's candidate. For example, a dark green ",
-                                          "in row 1 column 2 means that many people ",
-                                          "who voted for the candidate in column 2 ",
-                                          "also voted for the candidate in row 1"))
-
-
-}
-
-
-make_legend <- function() {
-legend_data <- data.frame(Shading = c("0-20%",
-                                      "21-40%",
-                                      "41-60%",
-                                      "61-80%",
-                                      "81-100%"),
-                          colors = c("#ffffff",
-                                     "#bae4b3",
-                                     "#74c476",
-                                     "#31a354",
-                                     "#006d2c"))
-my_hist <- ggplot(legend_data, aes(colors, fill = Shading)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#ffffff",
-                               "#bae4b3",
-                               "#74c476",
-                               "#31a354",
-                               "#006d2c"),
-                    name = "% Common Vote") +
-  theme_bw(base_size = 25) +
-  theme(legend.direction = "horizontal")
-
-
-
-#Extract Legend
-g_legend <- function(a.gplot){
-  tmp <- ggplot_gtable(ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)}
-
-legend <- g_legend(my_hist)
-grid.draw(legend)
-grid.arrange(legend,
-             heights = c(1, 1),widths = c(3,4,-4))
-}
-

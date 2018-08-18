@@ -124,10 +124,10 @@
 #   expect_equal(unique(file3$action), "voter cast ballot")
 # })
 #
-# test_that("all actions are voter cast ballot", {
-#   expect_equal(sum(is.na((file1$precinct))), 0)
-#   expect_equal(sum(is.na((file2$precinct))), 0)
-#   expect_equal(sum(is.na((file3$precinct))), 0)
+# test_that("No NA values", {
+#   expect_equal(sum(is.na((file1$division))), 0)
+#   expect_equal(sum(is.na((file2$division))), 0)
+#   expect_equal(sum(is.na((file3$division))), 0)
 #
 #   # expect_equal(sum(is.na((file1$time))), 0)
 #   # expect_equal(sum(is.na((file2$time))), 0)
@@ -137,13 +137,21 @@
 #   expect_equal(sum(is.na((file2$serial))), 0)
 #   expect_equal(sum(is.na((file3$serial))), 0)
 #
-#   expect_equal(sum(is.na((file1$page))), 0)
-#   expect_equal(sum(is.na((file2$page))), 0)
-#   expect_equal(sum(is.na((file3$page))), 0)
-#
-#   expect_equal(sum(is.na((file1$action))), 0)
-#   expect_equal(sum(is.na((file2$action))), 0)
-#   expect_equal(sum(is.na((file3$action))), 0)
+#   expect_equal(sum(is.na((file1$pdf_page))), 0)
+#   expect_equal(sum(is.na((file2$pdf_page))), 0)
+#   expect_equal(sum(is.na((file3$pdf_page))), 0)
+
+# expect_equal(sum(is.na((file1$start_action))), 0)
+# expect_equal(sum(is.na((file2$start_action))), 0)
+# expect_equal(sum(is.na((file3$start_action))), 0)
+# expect_equal(sum(is.na((file4$start_action))), 0)
+# expect_equal(sum(is.na((file5$start_action))), 0)
+
+# expect_equal(sum(is.na((file1$submit_action))), 0)
+# expect_equal(sum(is.na((file2$submit_action))), 0)
+# expect_equal(sum(is.na((file3$submit_action))), 0)
+# expect_equal(sum(is.na((file4$submit_action))), 0)
+# expect_equal(sum(is.na((file5$submit_action))), 0)
 #
 #   expect_equal(sum(is.na((file1$ward))), 0)
 #   expect_equal(sum(is.na((file2$ward))), 0)

@@ -224,6 +224,15 @@ test_that("Candidate has right name", {
                c("Tomas Sanchez"))
   expect_equal(file4$candidate[file4$uniqueID == "021010 18"],
                c("No Vote"))
+  expect_equal(file4$candidate[file4$uniqueID == "021636 19"],
+               c("Tom Wolf",
+                 "Mike Stack",
+                 "Brendan F Boyle",
+                 "Christine M Tartaglione",
+                 "Mark B Cohen",
+                 "No No",
+                 "No No",
+                 "No No"))
 
   expect_equal(file5$candidate[file5$uniqueID == "020966 80"],
                c("Yes Si",
@@ -289,6 +298,15 @@ test_that("Categories are correct", {
   expect_equal(file4$category[file4$uniqueID == "021010 16"],
                c("Senator in the General Assembly - 2nd District - Democrat"))
   expect_true(is.na(file4$category[file4$uniqueID == "021010 18"]))
+  expect_equal(file4$category[file4$uniqueID == "021636 19"],
+               c("Governor - Democrat",
+                 "Lieutenant Governor - Democrat",
+                 "Representative in Congress - 13th District - Democrat",
+                 "Senator in the General Assembly - 2nd District - Democrat",
+                 "Representative in the General Assembly - 202nd District - Democrat",
+                 "Proposed Charter Change Question #1",
+                 "Proposed Charter Change Question #2",
+                 "Proposed Charter Change Question #3"))
 
   expect_equal(file5$category[file5$uniqueID == "020966 80"],
                c("Proposed Charter Change Question #1",

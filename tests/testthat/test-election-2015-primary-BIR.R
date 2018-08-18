@@ -211,6 +211,22 @@ test_that("Candidate has right name", {
   expect_equal(file3$candidate[file3$uniqueID == "022904 63"],
                c("David Oh", "Daniel Tinney",
                  "Al Taubenberger"))
+  expect_equal(file3$candidate[file3$uniqueID == "022893 61"],
+               c("Timothy Dailey",
+                 "David Wecht",
+                 "Christine Donohue",
+                 "Alice Beck Dubow",
+                 "Christine Hope",
+                 "Jim Kenney",
+                 "Anne E Lazarus",
+                 "Lisa M Deeley",
+                 "No No",
+                 "Sherrie Cohen",
+                 "Yes Si",
+                 "Chris Mallios",
+                 "Ed Neilson",
+                 "No No",
+                 "No No"))
 
   expect_equal(file4$candidate[file4$uniqueID == "020551 54"],
                c("Anthony Hardy Williams"))
@@ -273,6 +289,22 @@ test_that("Categories are correct", {
                c("Council at Large - Republican",
                  "Council at Large - Republican",
                  "Council at Large - Republican"))
+  expect_equal(file3$category[file3$uniqueID == "022893 61"],
+               c("Special Election - Senator in the General Assembly - 5th District",
+                 "Justice of the Supreme Court - Democrat",
+                 "Justice of the Supreme Court - Democrat",
+                 "Judge of the Superior Court - Democrat",
+                 "Judge of the Municipal Court - Democrat",
+                 "Mayor - Democrat",
+                 "Justice of the Supreme Court - Democrat",
+                 "City Commissioners - Democrat",
+                 "Proposed Charter Change Question #1",
+                 "Council at Large - Democrat",
+                 "Proposed Charter Change Question #2",
+                 "Judge of the Court of Common Pleas - Democrat",
+                 "Council at Large - Democrat",
+                 "Proposed Charter Change Question #3",
+                 "Proposed Charter Change Question #4"))
 
   expect_equal(file4$category[file4$uniqueID == "020551 54"],
                c("Mayor - Democrat"))

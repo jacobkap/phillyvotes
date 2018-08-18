@@ -258,11 +258,11 @@ test_that("Categories are correct", {
                  "Proposed Charter Change Question #2",
                  "Proposed Charter Change Question #3"))
   expect_equal(file1$category[file1$uniqueID == "022820 43"],
-               c("Member of the Democratic State Committee - 5th Senatorial D",
-                 "Member of the Democratic State Committee - 5th Senatorial D",
-                 "Member of the Democratic State Committee - 5th Senatorial D",
-                 "Member of the Democratic State Committee - 5th Senatorial D",
-                 "Member of the Democratic State Committee - 5th Senatorial D"))
+               c("Member of the Democratic State Committee - 5th Senatorial District",
+                 "Member of the Democratic State Committee - 5th Senatorial District",
+                 "Member of the Democratic State Committee - 5th Senatorial District",
+                 "Member of the Democratic State Committee - 5th Senatorial District",
+                 "Member of the Democratic State Committee - 5th Senatorial District"))
   expect_equal(file1$category[file1$uniqueID == "022821 4"],
                c("Proposed Charter Change Question #2",
                  "Proposed Charter Change Question #3"))
