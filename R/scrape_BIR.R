@@ -6,54 +6,90 @@ philly_votes <- function(file_location){
   txt <- unlist(strsplit(txt, split = "\n"))
   txt <- trimws(txt)
 
-  txt <- gsub("CO COOPERMAN ", "CO COOPERMAN ", txt, ignore.case = TRUE)
-  txt <- gsub("BUTC BUTCHART ", "BUTC BUTCHART ", txt, ignore.case = TRUE)
-  txt <- gsub("J C CUNNINGHAM", "J C CUNNINGHAM", txt, ignore.case = TRUE)
-  txt <- gsub("PALU PALUMBO", "PALU PALUMBO", txt, ignore.case = TRUE)
-  txt <- gsub("B BR BRONSON", "B BR BRONSON", txt, ignore.case = TRUE)
-  txt <- gsub("FOX FOX", "FOX FOX", txt, ignore.case = TRUE)
-  txt <- gsub("JOHN MILTO YOUNGE", "JOHN MILTO YOUNGE", txt, ignore.case = TRUE)
-  txt <- gsub("GWENDOLY BRIGHT", "GWENDOLY BRIGHT", txt, ignore.case = TRUE)
-  txt <- gsub("W TUC TUCKER", "W TUC TUCKER", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
-  txt <- gsub("", "", txt, ignore.case = TRUE)
+  txt <- gsub("CO COOPERMAN ", "COOPERMAN           COOPERMAN ", txt,
+              ignore.case = TRUE)
+  txt <- gsub("BUTC BUTCHART ", "BUTCHART        BUTCHART ", txt,
+              ignore.case = TRUE)
+  txt <- gsub("J C CUNNINGHAM", "J CUNNINGHAM         CUNNINGHAM", txt,
+              ignore.case = TRUE)
+  txt <- gsub("PALU PALUMBO", "PALUMBO          PALUMBO", txt,
+              ignore.case = TRUE)
+  txt <- gsub("B BR BRONSON", "B BRONSON          BRONSON", txt,
+              ignore.case = TRUE)
+  txt <- gsub("FOX FOX", "FOX                FOX", txt,
+              ignore.case = TRUE)
+  txt <- gsub("JOHN MILTO YOUNGE", "JOHN MILTO          YOUNGE", txt,
+              ignore.case = TRUE)
+  txt <- gsub("GWENDOLY BRIGHT", "GWENDOLY        BRIGHT", txt,
+              ignore.case = TRUE)
+  txt <- gsub("W TUC TUCKER", "W TUCKER        TUCKER", txt,
+              ignore.case = TRUE)
+  txt <- gsub("HAR RANSOM", "HAR            RANSOM", txt,
+              ignore.case = TRUE)
+  txt <- gsub("SHI SHIRDAN HARRIS", "SHIRDAN    SHIRDAN HARRIS", txt,
+              ignore.case = TRUE)
+  txt <- gsub("J O OLSZEWSKI", "J OLSZEWSKI         OLSZEWSKI", txt,
+              ignore.case = TRUE)
+  txt <- gsub("GILBERT GILBERT", "GILBERT        GILBERT", txt,
+              ignore.case = TRUE)
+  txt <- gsub("HAYDEN HAYDEN", "HAYDEN        HAYDEN", txt,
+              ignore.case = TRUE)
+  txt <- gsub("WASHINGTO WASHINGTON", "WASHINGTON        WASHINGTON",
+              txt, ignore.case = TRUE)
+  txt <- gsub("BRADY BRADY", "BRADY        BRADY", txt,
+              ignore.case = TRUE)
+  txt <- gsub("KOSINSKI KOSINSKI", "KOSINSKI        KOSINSKI", txt,
+              ignore.case = TRUE)
+  txt <- gsub("NEIFIELD NEIFIELD", "NEIFIELD        NEIFIELD", txt,
+              ignore.case = TRUE)
+
+  txt <- gsub("L Te Tereshko", "L Tereshko        Tereshko", txt,
+              ignore.case = TRUE)
+  txt <- gsub("J Fo Ford", "J Ford         Ford", txt,
+              ignore.case = TRUE)
+  txt <- gsub("A Pa Patrick", "A Patrick       Patrick", txt,
+              ignore.case = TRUE)
+  txt <- gsub("I Dje Djerassi", "I Djerassi        Djerassi", txt,
+              ignore.case = TRUE)
+  txt <- gsub("O Neill O Neill", "O Neill       O Neill", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Deni Deni", "Deni        Deni", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Gant Gantman", "Gant            Gantman", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Jacquelin Allen", "Jacquelin        Allen", txt,
+              ignore.case = TRUE)
+
+  txt <- gsub("Ceis Ceisler", "Ceisler          Ceisler", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Car Carpenter", "Carpenter       Carpenter", txt,
+              ignore.case = TRUE)
+  txt <- gsub("S Sarmina", "Sarmina        Sarmina", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Er Erdos", "Erdos           Erdos", txt,
+              ignore.case = TRUE)
+  txt <- gsub("K R Robinson", "K R         Robinson", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Ro New", "Ro          New", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Shuter Shuter", "Shuter         Shuter", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Del Deleon", "Deleon        Deleon", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Eubanks Eubanks", "Eubanks           Eubanks", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Simm Simmons", "Simmons         Simmons", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Williams Williams", "Williams          Williams", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Jimenez Jr Jimenez", "Jimenez Jr          Jimenez", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Gehret Gehret", "Gehret           Gehret", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Meehan J Meehan", "Meehan J            Meehan", txt,
+              ignore.case = TRUE)
+  txt <- gsub("Shoga Shogan", "Shogan          Shogan", txt,
+              ignore.case = TRUE)
 
   txt <- gsub("CONVENTION (.*) DIST ", "CONVENTION \\1 DISTRICT    ",
               txt, ignore.case = TRUE)
@@ -102,15 +138,15 @@ philly_votes <- function(file_location){
   txt <- gsub("Castille Castille", "Castille        Castille", txt, ignore.case = TRUE)
   txt <- gsub("Panella Panella", "Panella           Panella", txt, ignore.case = TRUE)
   txt <- gsub("Baer Baer", "Baer            Baer", txt, ignore.case = TRUE)
-  txt <- gsub("JEFFREY P M MINEHART", "JEFFREY P M       MINEHART", txt, ignore.case = TRUE)
-  txt <- gsub("D O O KEEFE", "D O K          O KEEFE", txt, ignore.case = TRUE)
-  txt <- gsub("D O K O KEEFE", "D O K          O KEEFE", txt, ignore.case = TRUE)
-  txt <- gsub("F L LACHMAN ", "F L           LACHMAN ", txt, ignore.case = TRUE)
-  txt <- gsub("MC MCINERNEY ", "MC           MCINERNEY ", txt, ignore.case = TRUE)
-  txt <- gsub("Sch Schulman", "Sch       Schulman", txt, ignore.case = TRUE)
-  txt <- gsub("WRIGH WRIGHT", "WRIGH       WRIGHT", txt, ignore.case = TRUE)
-  txt <- gsub("D C Carrafiello", "D C       Carrafiello", txt, ignore.case = TRUE)
-  txt <- gsub("E B BRINKLEY", "E B       BRINKLEY", txt, ignore.case = TRUE)
+  txt <- gsub("JEFFREY P M MINEHART", "JEFFREY P MINEHART       MINEHART", txt, ignore.case = TRUE)
+  txt <- gsub("D O O KEEFE", "D O KEEFE         O KEEFE", txt, ignore.case = TRUE)
+  txt <- gsub("D O K O KEEFE", "D O KEEFE          O KEEFE", txt, ignore.case = TRUE)
+  txt <- gsub("F L LACHMAN ", "F LACHMAN           LACHMAN ", txt, ignore.case = TRUE)
+  txt <- gsub("MC MCINERNEY ", "MCINERNEY           MCINERNEY ", txt, ignore.case = TRUE)
+  txt <- gsub("Sch Schulman", "Schulman       Schulman", txt, ignore.case = TRUE)
+  txt <- gsub("WRIGH WRIGHT", "WRIGHT       WRIGHT", txt, ignore.case = TRUE)
+  txt <- gsub("D C Carrafiello", "D Carrafiello       Carrafiello", txt, ignore.case = TRUE)
+  txt <- gsub("E B BRINKLEY", "E BRINKLEY       BRINKLEY", txt, ignore.case = TRUE)
   txt <- gsub("STEVE JOHNSON", "STEVE      JOHNSON", txt, ignore.case = TRUE)
   txt <- gsub("FREDERICA A MASSIAH", "FREDERICA A       MASSIAH", txt, ignore.case = TRUE)
   txt <- gsub("A M MEANS", "A M         MEANS", txt, ignore.case = TRUE)

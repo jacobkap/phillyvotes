@@ -1,76 +1,80 @@
-# library(tidyverse)
-# library(fastDummies)
-# library(lubridate)
-# #
-# # wards_divisions <- data.frame(wards = 1:66,
-# #                               divisions = c(21, 27, 22, 21, 31,
-# #                                             18, 23, 30, 17, 29,
-# #                                             20, 24, 25, 11, 19,
-# #                                             18, 29, 17, 19, 11,
-# #                                             45, 29, 23, 19, 24,
-# #                                             23, 23, 18, 18, 17,
-# #                                             19, 31, 24, 42, 32,
-# #                                             41, 21, 21, 46, 51,
-# #                                             26, 25, 25, 19, 25,
-# #                                             23, 14, 23, 22, 30,
-# #                                             28, 28, 23, 22, 29,
-# #                                             41, 28, 44, 25, 23,
-# #                                             28, 26, 25, 18, 23,
-# #                                             46))
-# # locations <- c()
-# # for (i in 1:nrow(wards_divisions)) {
-# #   temp <- paste0(wards_divisions$wards[i], "-", 1:wards_divisions$divisions[i])
-# #   locations <- c(locations, temp)
-# # }
-# #
+library(tidyverse)
+library(fastDummies)
+library(stringr)
+library(lubridate)
+library(data.table)
+#
+# wards_divisions <- data.frame(wards = 1:66,
+#                               divisions = c(21, 27, 22, 21, 31,
+#                                             18, 23, 30, 17, 29,
+#                                             20, 24, 25, 11, 19,
+#                                             18, 29, 17, 19, 11,
+#                                             45, 29, 23, 19, 24,
+#                                             23, 23, 18, 18, 17,
+#                                             19, 31, 24, 42, 32,
+#                                             41, 21, 21, 46, 51,
+#                                             26, 25, 25, 19, 25,
+#                                             23, 14, 23, 22, 30,
+#                                             28, 28, 23, 22, 29,
+#                                             41, 28, 44, 25, 23,
+#                                             28, 26, 25, 18, 23,
+#                                             46))
+# locations <- c()
+# for (i in 1:nrow(wards_divisions)) {
+#   temp <- paste0(wards_divisions$wards[i], "-", 1:wards_divisions$divisions[i])
+#   locations <- c(locations, temp)
+# }
+#
 setwd("C:/Users/user/Dropbox/R_project/phillyvotes/data/clean_data/")
 files <- list.files(pattern = ".rda")
 BIR_files <- files[grep("bir.rda", files)]
 CAR_files <- files[grep("car.rda", files)]
 BIR_files_reg <- BIR_files[!grepl("special", BIR_files)]
 
-for (file in BIR_files) {
+for (file in BIR_files_reg[1:13]) {
   setwd("C:/Users/user/Dropbox/R_project/phillyvotes/data/clean_data/")
   file_name <- gsub(".rda", "", file)
   election <- gsub("_...$", "", file_name)
   load(file)
   assign("data", get(file_name))
   do.call("rm", list(as.name(file_name)))
-  message(file_name)
+  print(file_name)
 
   z <- sort(unique(data$category))
   z <- z[!grepl("Ward|judge|inspector", z, ignore.case = TRUE)]
-#print(z)
-message("\n")
-#print(sort(unique(data$candidate)))
-print(grep("court order|write", unique(data$candidate)))
-cands <- unique(data$candidate)
-print(cands[nchar(cands) == min(nchar(cands))])
-message("\n\n\n\n\n")
-#
-#
-#   # js_results(data, election)
-#   # js_num_selected(data, election)
-#   # js_cond_table_prep(data, election)
-#    js_vote_time(data, election)
-#
-#
-#
-#   # zz = data %>%
-#   #   group_by(serial) %>%
-#   #    summarize(time = min(time))
-#   #  print(table(hour(zz$time)))
-#
-#   #  all_wards <- 1:66
-#   #  print(all_wards[!all_wards %in% unique(data$ward)])
-#   #  data$temp_location <- paste0(data$ward, "-", data$division)
-#   #  print(locations[!locations %in% unique(data$temp_location)])
-   rm(data); gc(); # Sys.sleep(3)
- }
+  #print(z)
+  message("\n")
+  #print(sort(unique(data$candidate)))
+  #print(grep("court order|write", unique(data$candidate)))
+  cands <- unique(data$candidate)
+  #print(cands[nchar(cands) == min(nchar(cands))])
+  print(cands[nchar(cands) == max(nchar(cands))])
+  message("\n\n\n\n\n")
+  #
+  #
+  # js_results(data, election)
+  # js_num_selected(data, election)
+  system.time(js_cond_table_prep(data, election))
+  #vote_time_data <-   js_vote_time(data, election)
+  #
+  #
+  #
+  #   # zz = data %>%
+  #   #   group_by(serial) %>%
+  #   #    summarize(time = min(time))
+  #   #  print(table(hour(zz$time)))
+  #
+  #   #  all_wards <- 1:66
+  #   #  print(all_wards[!all_wards %in% unique(data$ward)])
+  #   #  data$temp_location <- paste0(data$ward, "-", data$division)
+  #   #  print(locations[!locations %in% unique(data$temp_location)])
+  rm(data); gc(); # Sys.sleep(3)
+}
 
 js_vote_time <- function(data, election) {
 
   data$vote_time_minutes[data$vote_time_minutes > 30] <- NA
+  data$vote_time_minutes[data$vote_time_minutes == 0] <- NA
   final_data <- data.frame(stringsAsFactors = FALSE)
 
   data$hour[data$hour < 7] <- 7
@@ -154,6 +158,8 @@ js_vote_time <- function(data, election) {
                                          pretty = TRUE)
   write(possible_locations,
         paste0("locations.json"))
+
+  return(final_data)
 }
 
 js_results <- function(data, election) {
@@ -426,11 +432,6 @@ js_num_selected <- function(data, election) {
 }
 
 
-
-
-
-
-
 js_cond_table_prep <- function(data, election) {
 
   # Ward 6, division 5 has an issue in this election where there are duplicate
@@ -441,207 +442,165 @@ js_cond_table_prep <- function(data, election) {
       data %>%
       dplyr::filter(location != "06-05")
   }
+  source('C:/Users/user/Dropbox/R_project/phillyvotes/R/conditional_table.R')
+  offices <- get_offices(data)
+  # offices <- offices[grep("general assembly",
+  #                         offices, ignore.case = TRUE,
+  #                         invert = TRUE)]
+  setwd(paste0("C:/Users/user/Dropbox/phillyvotingtool/data/cand_comb/", election))
+  all_offices <- jsonlite::toJSON(offices,
+                                  pretty = TRUE)
+  write(all_offices,
+        paste0("cand_comb_office_choices.json"))
 
-  if (!grepl("special", election)) {
-
-    source('C:/Users/user/Dropbox/R_project/phillyvotes/R/conditional_table.R')
-    offices <- get_offices(data)
-    offices <- offices[grep("general assembly",
-                            offices, ignore.case = TRUE,
-                            invert = TRUE)]
-    setwd(paste0("C:/Users/user/Dropbox/phillyvotingtool/data/cand_comb/", election))
-    all_offices <- jsonlite::toJSON(offices,
-                                    pretty = TRUE)
-    write(all_offices,
-          paste0("cand_comb_office_choices.json"))
-
-    data$office_location <- paste(data$category,
-                                  data$ward,
-                                  data$division)
+  data$office_location <- paste(data$category,
+                                data$ward,
+                                data$division)
 
 
-    if (grepl("primary", election, ignore.case = TRUE)) {
-      dem_offices <- offices[grepl("democrat", offices, ignore.case = TRUE)]
-      rep_offices <- offices[grepl("republican", offices, ignore.case = TRUE)]
-      dem_office_lists <- combn(dem_offices, 2, simplify = FALSE)
-      rep_office_lists <- combn(rep_offices, 2, simplify = FALSE)
-      office_lists <- append(as.list(offices), dem_office_lists)
-      office_lists <- append(office_lists, rep_office_lists)
-    } else {
-      office_lists <- combn(offices, 2, simplify = FALSE)
-      office_lists <- append(as.list(offices), office_lists)
+  if (grepl("primary", election, ignore.case = TRUE)) {
+    dem_offices <- offices[grepl("democrat", offices, ignore.case = TRUE)]
+    rep_offices <- offices[grepl("republican", offices, ignore.case = TRUE)]
+    dem_office_lists <- combn(dem_offices, 2, simplify = FALSE)
+    rep_office_lists <- combn(rep_offices, 2, simplify = FALSE)
+    office_lists <- append(as.list(offices), dem_office_lists)
+    office_lists <- append(office_lists, rep_office_lists)
+  } else {
+    office_lists <- combn(offices, 2, simplify = FALSE)
+    office_lists <- append(as.list(offices), office_lists)
+  }
+
+  # Since you cannot vote for two district, removes if both of the offices
+  # are districts
+  gen_assembly_rep     <- "repres.*assembly.*district"
+  gen_assembly_senator <- "senator.*assembly.*district"
+  congress_rep         <- "repres.*congress.*district"
+  district_council_rep <- "district council"
+  for (i in length(office_lists):1) {
+    num_districts_1 <- str_count(tolower(office_lists[[i]]), gen_assembly_rep)
+    num_districts_2 <- str_count(tolower(office_lists[[i]]), gen_assembly_senator)
+    num_districts_3 <- str_count(tolower(office_lists[[i]]), congress_rep)
+    num_districts_4 <- str_count(tolower(office_lists[[i]]), district_council_rep)
+    num_districts_5 <- str_count(tolower(office_lists[[i]]),
+                                 "general assembly")
+    if (sum(num_districts_1) > 1 |
+        sum(num_districts_2) > 1 |
+        sum(num_districts_3) > 1 |
+        sum(num_districts_4) > 1 |
+        sum(num_districts_5) > 1) {
+      office_lists[[i]] <- NULL
     }
+  }
 
-    # Since you cannot vote for two district, removes if both of the offices
-    # are districts
-    gen_assembly_rep     <- "repres.*assembly.*district"
-    gen_assembly_senator <- "senator.*assembly.*district"
-    congress_rep         <- "repres.*congress.*district"
-    for (i in length(office_lists):1) {
-      num_districts_1 <- str_count(tolower(office_lists[[i]]), gen_assembly_rep)
-      num_districts_2 <- str_count(tolower(office_lists[[i]]), gen_assembly_senator)
-      num_districts_3 <- str_count(tolower(office_lists[[i]]), congress_rep)
-      num_districts_4 <- str_count(tolower(office_lists[[i]]),
-                                   "general assembly")
-      if (sum(num_districts_1) > 1 |
-          sum(num_districts_2) > 1 |
-          sum(num_districts_3) > 1 |
-          sum(num_districts_4) > 1) {
-        office_lists[[i]] <- NULL
+
+
+  data <- data.table::data.table(data)
+  data <- data[data$category %in% offices]
+  gc(); Sys.sleep(1)
+
+  for (n in 1:length(office_lists)) {
+
+    office <- office_lists[[n]]
+    office <- sort(office)
+    office_temp <- data[data$category %in% office]
+    gc()
+
+
+    # If the offices DO share any common wards, allow to continue
+    location1 <- unique(office_temp$location[office_temp$category %in% office[1]])
+    location2 <- unique(office_temp$location[office_temp$category %in% office[length(office)]])
+    common_locations <- intersect(location1, location2)
+    if (length(common_locations) > 0) {
+      office_temp <- office_temp[office_temp$location %in% common_locations]
+      gc()
+
+      common_locations <- sort(common_locations)
+      unique_locations <- c("All-All",
+                            sort(paste0(unique(office_temp$ward), "-All")),
+                            common_locations)
+      possible_wards <- c()
+      possible_locations <- c()
+      final_data <- data.frame(stringsAsFactors = FALSE)
+
+      for (i in 1:length(unique_locations)) {
+        selected_location <- unique_locations[i]
+       # message(selected_location)
+        if (selected_location == "All-All") {
+          df <- office_temp
+        } else if (grepl("[0-9]-All", selected_location)) {
+          selected_ward <- gsub("-All", "", selected_location)
+          df <- office_temp[ward %in% selected_ward]
+        } else {
+          df <- office_temp[location %in% selected_location]
+        }
+
+
+        df <- conditional_table(office_temp, df)
+        temp <- data.frame(t(names(df)), stringsAsFactors = FALSE)
+        names(temp) <- names(df)
+        df <- bind_rows(temp, df)
+
+        names(df) <- paste0("col_", 1:ncol(df))
+        df$ward <- gsub("-.*", "", selected_location)
+        if (df$ward[1] != "All"){
+          df$ward <- as.character(as.numeric(df$ward))
+        }
+        df$division <- gsub(".*-", "", selected_location)
+        if (df$division[1] != "All") {
+          df$division <- as.character(as.numeric(df$division))
+        }
+        final_data <- dplyr::bind_rows(final_data, df)
+
+
+        possible_wards <- c(possible_wards,
+                            unique(df$ward))
+        possible_locations <- c(possible_locations,
+                                selected_location)
+      }
+      office_save_name <- paste(office, collapse = " ")
+      possible_wards <- unique(possible_wards)
+      possible_wards <- possible_wards[possible_wards != "All"]
+      possible_wards <- sort(as.numeric(possible_wards))
+      possible_wards <- c("All", possible_wards)
+      possible_wards_vector <- possible_wards
+      possible_wards <- jsonlite::toJSON(possible_wards,
+                                         pretty = TRUE)
+
+      possible_locations <- possible_locations[!grepl("All", possible_locations)]
+      possible_locations <- jsonlite::toJSON(possible_locations,
+                                             pretty = TRUE)
+      write(possible_locations,
+            paste0("locations_", office_save_name, ".json"))
+
+
+      for (k in 1:ncol(final_data)) {
+        final_data[, k][is.na(final_data[, k])] <- 0
+        final_data[, k][final_data[, k] == "V1"] <- ""
+        final_data[, k][grepl("To Remove", final_data[, k])] <- ""
+
+      }
+
+      write(possible_wards,
+            paste0("wards_", office_save_name, ".json"))
+
+
+      for (selected_ward in possible_wards_vector) {
+
+        real_final_data <-
+          final_data %>%
+          dplyr::filter(ward %in% selected_ward) %>%
+          dplyr::select(-ward)
+
+        if (length(real_final_data) > 0) {
+          readr::write_csv(real_final_data, path = paste0("cand_comb_",
+                                                          office_save_name,
+                                                          "_ward_",
+                                                          selected_ward,
+                                                          ".csv"))
+        }
       }
     }
-
-
-
-    data <- data.table::data.table(data)
-    data <- data[category %in% offices]
-
-    for (n in 1:length(office_lists)) {
-
-      office <- office_lists[[n]]
-      office <- sort(office)
-      office_temp <- data[category %in% office]
-
-
-      # If the offices DO share any common wards, allow to continue
-      wards1 <- unique(office_temp$ward[office_temp$category %in% office[1]])
-      wards2 <- unique(office_temp$ward[office_temp$category %in% office[length(office)]])
-      if (any(wards1 %in% wards2)) {
-        all_possible_wards <- 1:66
-        all_possible_wards <- all_possible_wards[all_possible_wards %in% wards1]
-        all_possible_wards <- all_possible_wards[all_possible_wards %in% wards2]
-        possible_ward_divisions <- office_temp$location[office_temp$ward %in% all_possible_wards]
-        possible_ward_divisions <- unique(possible_ward_divisions)
-
-        office_temp <- office_temp[office_temp$location %in% possible_ward_divisions, ]
-
-
-        # final_list <- list()
-        unique_locations <- c("All-All",
-                              paste0(all_possible_wards, "-All"),
-                              possible_ward_divisions)
-        possible_wards <- c()
-        possible_locations <- c()
-        final_data <- data.frame(stringsAsFactors = FALSE)
-        for (i in 1:length(unique_locations)) {
-          selected_location <- unique_locations[i]
-          # message(selected_location)
-          if (selected_location == "All-All") {
-            df <- office_temp
-          } else if (grepl("[0-9]-All", selected_location)) {
-            selected_ward <- gsub("-All", "", selected_location)
-            df <- office_temp[ward %in% selected_ward]
-          } else {
-            df <- office_temp[location %in% selected_location]
-          }
-
-
-          if (nrow(df) > 0) {
-            df <- as.data.frame(df, stringsAsFactors = FALSE)
-            df <- conditional_table(office_temp, df)
-            temp <- data.frame(t(names(df)), stringsAsFactors = FALSE)
-            names(temp) <- names(df)
-            df <- bind_rows(temp, df)
-
-            names(df) <- paste0("col_", 1:ncol(df))
-
-            #df <- cbind(df, data.frame(order = 1:ncol(df)))
-
-
-            # names_col <- data.frame(Candidate = c("", names(df), "Total"),
-            #                         stringsAsFactors = FALSE)
-            # names_row <- data.frame(t(names(df)),
-            #                         stringsAsFactors = FALSE)
-            # names(names_row) <- names(df)
-            # df <- bind_rows(names_row, df)
-            # df <- bind_cols(names_col, df)
-            df$ward <- gsub("-.*", "", selected_location)
-            if (df$ward[1] != "All"){
-              df$ward <- as.character(as.numeric(df$ward))
-            }
-            df$division <- gsub(".*-", "", selected_location)
-            if (df$division[1] != "All") {
-              #  df <- df[-1, ]
-              df$division <- as.character(as.numeric(df$division))
-            }
-            #df <- as.matrix(df)
-            # final_list[[i]] <- df
-            final_data <- dplyr::bind_rows(final_data, df)
-
-            # Fix issue where division has no write-in but others do
-            # col_number <- grep("ward", names(final_data)) - 1
-            # final_data[grep("V1", final_data[, 1]),
-            #            col_number] <- "Write In"
-
-            # final_data[grep("To Remove", final_data[, 1]),
-            #            col_number] <- names(final_data)[col_number]
-            # final_data[, col_number][is.na(final_data[, col_number])] <- 0
-            #
-            #
-            # final_data[grep(names(final_data)[col_number], final_data[, col_number]) - 1,
-            #            col_number] <- col_number
-
-            possible_wards <- c(possible_wards,
-                                unique(df$ward))
-            possible_locations <- c(possible_locations,
-                                    selected_location)
-          }
-        }
-        office_save_name <- paste(office, collapse = " ")
-        possible_wards <- unique(possible_wards)
-        possible_wards <- possible_wards[possible_wards != "All"]
-        possible_wards <- sort(as.numeric(possible_wards))
-        possible_wards <- c("All", possible_wards)
-        possible_wards_vector <- possible_wards
-        possible_wards <- jsonlite::toJSON(possible_wards,
-                                           pretty = TRUE)
-
-        possible_locations <- possible_locations[!grepl("All", possible_locations)]
-        possible_locations <- jsonlite::toJSON(possible_locations,
-                                               pretty = TRUE)
-        write(possible_locations,
-              paste0("locations_", office_save_name, ".json"))
-
-
-        for (k in 1:ncol(final_data)) {
-          final_data[, k][is.na(final_data[, k])] <- 0
-          final_data[, k][final_data[, k] == "V1"] <- ""
-          final_data[, k][grepl("To Remove", final_data[, k])] <- ""
-
-        }
-
-        write(possible_wards,
-              paste0("wards_", office_save_name, ".json"))
-
-
-        for (selected_ward in possible_wards_vector) {
-          # cond <- sapply(final_list, function(x) !is.null(x$ward) && x$ward == final_ward)
-          # cond <- sapply(cond, "[", 1)
-          # to_save = final_list[cond]
-
-          real_final_data <-
-            final_data %>%
-            dplyr::filter(ward %in% selected_ward) %>%
-            dplyr::select(-ward)
-
-          if (length(real_final_data) > 0) {
-            readr::write_csv(real_final_data, path = paste0("cand_comb_",
-                                                            office_save_name,
-                                                            "_ward_",
-                                                            selected_ward,
-                                                            ".csv"))
-            # to_save <- jsonlite::toJSON(to_save, pretty = TRUE)
-            #
-            # write(to_save, paste0("cand_comb_",
-            #                       office_save_name,
-            #                       "_ward_",
-            #                       final_ward,
-            #                       ".json"))
-          }
-        }
-      }
-      message(office)
-    }
+ #   message(office)
   }
 }
 

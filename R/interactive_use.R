@@ -1,11 +1,12 @@
-
-main_folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data/PDF_data"
-folders <- list.files(main_folder, full.names = TRUE)
-for (folder in folders) {
-  philadelphia_votes(folder)
-}
+#
+#main_folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data/PDF_data"
+# folders <- list.files(main_folder, full.names = TRUE)
+# for (folder in folders) {
+#   philadelphia_votes(folder)
+# }
 philadelphia_votes <- function(folder) {
   library(readr)
+  library(dplyr)
   setwd(folder)
   folder_name <- gsub(".*/20", "20", folder)
   message("\n")
@@ -20,10 +21,11 @@ philadelphia_votes <- function(folder) {
   BIR_files <- files[grep("BIR", files, ignore.case = TRUE)]
   CAR_files <- files[grep("CAR", files, ignore.case = TRUE)]
 
-  # # Sets up progress bar
+  # Sets up progress bar
   pb = txtProgressBar(min = 0, max = length(BIR_files), initial = 0)
   BIR_results <- data.table::data.table()
   for (i in seq_along(BIR_files)) {
+    message(BIR_files[i])
     BIR_results <- data.table::rbindlist(list(BIR_results,
                                               data.table::data.table(philly_votes(BIR_files[i]))))
     setTxtProgressBar(pb, i)
@@ -34,7 +36,7 @@ philadelphia_votes <- function(folder) {
 
   # Removes all write-ins and court order, as requested.
   BIR_results <- BIR_results[grep("court order|write in", BIR_results$candidate,
-                    invert = TRUE, ignore.case = TRUE),]
+                                  invert = TRUE, ignore.case = TRUE),]
 
   # This special election has too long a name so it's cut off partially.
   # This fixes it so it divides the name into the 3 offices as it should be.
@@ -47,6 +49,7 @@ philadelphia_votes <- function(folder) {
   pb = txtProgressBar(min = 0, max = length(CAR_files), initial = 0)
   CAR_results <- data.table::data.table()
   for (i in seq_along(CAR_files)) {
+#    message(CAR_files)
     CAR_results <- data.table::rbindlist(list(CAR_results,
                                               data.table::data.table(scrape_CAR(CAR_files[i]))))
     setTxtProgressBar(pb, i)
@@ -124,13 +127,13 @@ fix_CAR_time <- function(data) {
     dplyr::filter(lubridate::hour(time) > 18)
 
   if (nrow(wrong_start_machines) > 0) {
-  data$submit_time[data$serial %in% wrong_start_machines$serial] <-
-    data$submit_time[data$serial %in% wrong_start_machines$serial] - as.difftime(12, unit = "hours")
-  data$start_time[data$serial %in% wrong_start_machines$serial] <-
-    data$start_time[data$serial %in% wrong_start_machines$serial] - as.difftime(12, unit = "hours")
-  data$hour                  <- lubridate::hour(data$submit_time)
-  data$vote_time_seconds     <- as.numeric(data$submit_time - data$start_time)
-  data$vote_time_minutes     <- data$vote_time_seconds / 60 # Makes the units be minutes
+    data$submit_time[data$serial %in% wrong_start_machines$serial] <-
+      data$submit_time[data$serial %in% wrong_start_machines$serial] - as.difftime(12, unit = "hours")
+    data$start_time[data$serial %in% wrong_start_machines$serial] <-
+      data$start_time[data$serial %in% wrong_start_machines$serial] - as.difftime(12, unit = "hours")
+    data$hour                  <- lubridate::hour(data$submit_time)
+    data$vote_time_seconds     <- as.numeric(data$submit_time - data$start_time)
+    data$vote_time_minutes     <- data$vote_time_seconds / 60 # Makes the units be minutes
   }
 
   return(data)

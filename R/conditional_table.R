@@ -1,4 +1,3 @@
-
 conditional_table <- function(all_data, data) {
 
   fix_cap <- function(words) {
@@ -30,10 +29,14 @@ conditional_table <- function(all_data, data) {
     data[grep("to_remove", data$uniqueID), col] <- 0
   }
 
-  unique_votes <- data %>%
-    group_by(uniqueID) %>%
-    summarise_at(candidate_cols,
-                 .funs = "sum")
+
+  unique_votes <- data[, lapply(.SD, sum), by = list(uniqueID),
+                       .SDcols = candidate_cols ]
+  unique_votes <- as.data.frame(unique_votes, stringsAsFactors = FALSE)
+  # unique_votes <- data %>%
+  #   group_by(uniqueID) %>%
+  #   summarise_at(candidate_cols,
+  #                .funs = "sum")
   unique_votes$uniqueID <- NULL
 
   # Shows how many people that voter voted for
@@ -72,7 +75,7 @@ conditional_table <- function(all_data, data) {
   # Puts the voting data set into the proper order - winner, 2nd place, etc.
   col_names <- c(results[, 1], unique(data$candidate[!data$candidate %in% results[, 1]]))
   col_names <- paste0("candidate_", col_names)
-  unique_votes <- unique_votes[, col_names]
+  unique_votes <- unique_votes[, col_names, drop = FALSE]
   for (i in 1:nrow(results)) {
     results[i, 2:ncol(results)] <-
       unique_votes %>%
@@ -141,24 +144,24 @@ conditional_table <- function(all_data, data) {
   results <- bind_cols(names_col, results)
 
 
-    office_row <- vector(mode = "character", length = ncol(results))
-    office_row[2] <- most_common_office
-    office_row[office_row == ""] <- "to_remove"
+  office_row <- vector(mode = "character", length = ncol(results))
+  office_row[2] <- most_common_office
+  office_row[office_row == ""] <- "to_remove"
 
 
-    if (length(other_office) > 0) {
+  if (length(other_office) > 0) {
     office_row[length(unique(data$candidate[data$category ==
                                               most_common_office])) + 2] <- other_office
-    }
+  }
 
-    temp <- data.frame(t(names(results)), stringsAsFactors = FALSE)
-    names(temp) <- names(results)
-    results <- bind_rows(temp, results)
-    names(results) <- office_row
+  temp <- data.frame(t(names(results)), stringsAsFactors = FALSE)
+  names(temp) <- names(results)
+  results <- bind_rows(temp, results)
+  names(results) <- office_row
 
   offices_to_remove <- paste0(" ", unique(data$category), collapse = "|")
   if (length(unique(data$category)) == 1) {
-  names(results) <- gsub(offices_to_remove, "", names(results))
+    names(results) <- gsub(offices_to_remove, "", names(results))
   }
   results[1, ] <- gsub(offices_to_remove, "", results[1, ])
   results[, 1] <- gsub(offices_to_remove, "", results[, 1])
@@ -174,10 +177,9 @@ conditional_table <- function(all_data, data) {
 
   names(results) <- sapply(names(results), fix_cap)
 
- # if (length(unique(data$category)) == 1) {
+  # if (length(unique(data$category)) == 1) {
   #  results <- rbind(names(results), results)
-#  }
+  #  }
 
   return(results)
-
 }
