@@ -1,7 +1,8 @@
-#
-#main_folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data/PDF_data"
+
+# main_folder    <- "C:/Users/user/Dropbox/R_project/phillyvotes/data/PDF_data"
 # folders <- list.files(main_folder, full.names = TRUE)
-# for (folder in folders) {
+# folder <- folders[19]
+# # for (folder in folders) {
 #   philadelphia_votes(folder)
 # }
 philadelphia_votes <- function(folder) {
@@ -22,13 +23,12 @@ philadelphia_votes <- function(folder) {
   CAR_files <- files[grep("CAR", files, ignore.case = TRUE)]
 
   # Sets up progress bar
-  pb = txtProgressBar(min = 0, max = length(BIR_files), initial = 0)
   BIR_results <- data.table::data.table()
-  for (i in seq_along(BIR_files)) {
-    message(BIR_files[i])
+  for (bir_file in BIR_files) {
+    message(bir_file)
     BIR_results <- data.table::rbindlist(list(BIR_results,
-                                              data.table::data.table(philly_votes(BIR_files[i]))))
-    setTxtProgressBar(pb, i)
+                                              data.table::data.table(philly_votes(bir_file))))
+    gc()
   }
   BIR_results <- data.frame(BIR_results)
   BIR_results <- remove_duplicate_voters(BIR_results)
@@ -49,7 +49,7 @@ philadelphia_votes <- function(folder) {
   pb = txtProgressBar(min = 0, max = length(CAR_files), initial = 0)
   CAR_results <- data.table::data.table()
   for (i in seq_along(CAR_files)) {
-#    message(CAR_files)
+    #    message(CAR_files)
     CAR_results <- data.table::rbindlist(list(CAR_results,
                                               data.table::data.table(scrape_CAR(CAR_files[i]))))
     setTxtProgressBar(pb, i)
@@ -60,12 +60,12 @@ philadelphia_votes <- function(folder) {
 
   setwd("C:/Users/user/Dropbox/R_project/phillyvotes/data/clean_data/")
   assign(BIR_name, BIR_results) # Change name
-  save( list = BIR_name,
-        file = paste0(BIR_name, ".rda"))
+  save(list = BIR_name,
+       file = paste0(BIR_name, ".rda"))
 
   assign(CAR_name, CAR_results) # Change name
-  save( list = CAR_name,
-        file = paste0(CAR_name, ".rda"))
+  save(list = CAR_name,
+       file = paste0(CAR_name, ".rda"))
 }
 
 

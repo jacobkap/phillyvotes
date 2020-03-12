@@ -279,44 +279,7 @@ philly_votes <- function(file_location){
 
   # Makes category and candidate have proper capitalization
   # - original was all caps
-  data$category <- sapply(data$category, simpleCap)
-  data$category <- gsub("-dem$| - dem$|-D$", " - Democrat",
-                        data$category)
-  data$category <- gsub("-d-", " - Democrat - ",
-                        data$category, ignore.case = TRUE)
-  data$category <- gsub("-r-", " - Republican - ",
-                        data$category, ignore.case = TRUE)
-  data$category <- gsub("-rep$| - rep$|-R$", " - Republican",
-                        data$category)
-  data$category <- gsub("Congress-", "Congress - ",
-                        data$category)
-  data$category <- gsub("Council-", "Council - ",
-                        data$category)
-  data$category <- gsub("Assembly-", "Assembly - ",
-                        data$category)
-  data$category <- gsub("Committee-", "Committee - ",
-                        data$category)
-  data$category <- gsub("representative", "Representative",
-                        data$category)
-  data$category <- gsub("democratic", "Democratic",
-                        data$category)
-  data$category <- gsub("republican", "Republican",
-                        data$category)
-  data$category <- gsub("\\s+", " ",
-                        data$category)
-  data$category <- gsub("Democratic", "TEMPORARY",
-                        data$category)
-  data$category <- gsub("Democratocrat |dem[A-Z]+ |dem[A-Z]+$", "Democrat ",
-                        data$category, ignore.case = TRUE)
-  data$category <- gsub("RepRepublican |Republic[A-Z]+ |republic[A-Z]+$",
-                        "Republican ",
-                        data$category, ignore.case = TRUE)
-  data$category <- gsub("TEMPORARY", "Democratic",
-                        data$category)
-  data$category <- gsub("Senatorial D$", "Senatorial District", data$category)
-  data$category <- gsub(" Dist ", " District ", data$category)
-  data$category <- gsub(" Distr | Distr$", " District ", data$category)
-  data$category <- stringr::str_trim(data$category)
+  data <- fix_category_names(data)
 
   data$candidate <- sapply(data$candidate, simpleCap)
 
@@ -400,3 +363,58 @@ get_split_pieces <- function(data, list_element) {
 }
 
 
+fix_category_names <- function(data) {
+  # Makes category and candidate have proper capitalization
+  # - original was all caps
+  data$category <- crimeutils::capitalize_words(data$category)
+  data$category <- gsub("-dem$| - dem$|-D$", " - Democrat",
+                        data$category,
+                        ignore.case = TRUE)
+  data$category <- gsub("-d-", " - Democrat - ",
+                        data$category, ignore.case = TRUE)
+  data$category <- gsub("-r-", " - Republican - ",
+                        data$category, ignore.case = TRUE)
+  data$category <- gsub("-rep$| - rep$|-R$", " - Republican",
+                        data$category,
+                        ignore.case = TRUE)
+  data$category <- gsub("Congress-", "Congress - ",
+                        data$category)
+  data$category <- gsub("Council-", "Council - ",
+                        data$category)
+  data$category <- gsub("Assembly-", "Assembly - ",
+                        data$category)
+  data$category <- gsub("Committee-", "Committee - ",
+                        data$category)
+  data$category <- gsub("representative", "Representative",
+                        data$category)
+  data$category <- gsub("democratic", "Democratic",
+                        data$category)
+  data$category <- gsub("republican", "Republican",
+                        data$category)
+  data$category <- gsub("\\s+", " ",
+                        data$category)
+  data$category <- gsub("Democratic", "TEMPORARY",
+                        data$category)
+  data$category <- gsub("Democratocrat |dem[A-Z]+ |dem[A-Z]+$", "Democrat ",
+                        data$category, ignore.case = TRUE)
+  data$category <- gsub("RepRepublican |Republic[A-Z]+ |republic[A-Z]+$",
+                        "Republican ",
+                        data$category, ignore.case = TRUE)
+  data$category <- gsub("TEMPORARY", "Democratic",
+                        data$category)
+  data$category <- gsub("At-large", "At-Large",
+                        data$category)
+  data$category <- gsub("Senatorial D$", "Senatorial District", data$category)
+  data$category <- gsub(" Dist ", " District ", data$category)
+  data$category <- gsub(" Distr | Distr$", " District ", data$category)
+  data$category <- gsub(" Of ", " of ", data$category)
+  data$category <- gsub(" The ", " the ", data$category)
+  data$category <- gsub(" And ", " and ", data$category)
+  data$category <- gsub(" In ", " in ", data$category)
+  data$category <- gsub(" To ", " to ", data$category)
+
+
+
+  data$category <- stringr::str_trim(data$category)
+  return(data)
+}

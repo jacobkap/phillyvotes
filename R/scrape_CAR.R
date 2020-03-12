@@ -1,3 +1,5 @@
+
+
 scrape_CAR <- function(file) {
   library(dplyr)
   ### Convert PDF to lines of text ###
